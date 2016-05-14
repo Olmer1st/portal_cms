@@ -20,7 +20,7 @@ class Books(object):
     def find_by_bid(self):
         pass
 
-    def find_by_file(self):
+    def find_by_file(self, libid, filename):
         pass
 
     def save_book(self, info):
