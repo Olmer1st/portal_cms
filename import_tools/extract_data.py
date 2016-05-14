@@ -5,18 +5,20 @@ import config as cfg
 import zipfile
 import MySQLdb
 import os
+import boo
 
+def create_folder(filename):
+    pass
 
 
 def find_zip(filename):
-
     pass
 
-def open_inpx():
+
+def parse_inpx(inpx):
     print "parse inpx file"
-    inpx = zipfile.ZipFile(cfg.LIBRARY["inpx_file"], 'r')
-    list_of_inps = inpx.infolist()
-    for inp in list_of_inps:
+    infolist = inpx.infolist()
+    for inp in infolist:
         if inp.filename.startswith("fb2"):
             doc = inpx.read(inp.filename)
             lines = doc.splitlines()
@@ -24,10 +26,16 @@ def open_inpx():
                 print line
 
 
+def open_inpx():
+    print "open inpx file"
+    inpx = zipfile.ZipFile(cfg.LIBRARY["inpx_file"], 'r')
+
+
 
 
 def start_process():
-    open_inpx()
+    inpx = open_inpx()
+    parse_inpx(inpx)
 
 
 if __name__ == "__main__":

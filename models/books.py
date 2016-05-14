@@ -10,7 +10,6 @@ import  book_info
 
 class Books(object):
 
-
     def __init__(self):
         self.mysql_connection = None
         pass
@@ -22,4 +21,7 @@ class Books(object):
         pass
 
     def find_by_file(self):
+        pass
+
+    def save_book(self, info):
         pass

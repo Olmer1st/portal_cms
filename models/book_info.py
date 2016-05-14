@@ -9,8 +9,6 @@ import config as cfg
 
 class BookInfo(object):
 
-    mysql_connection = None
-
     def __init__(self):
         self._author = None
         self._genre = None
@@ -25,4 +23,8 @@ class BookInfo(object):
         self._date= None
         self._lang= None
         self._keywords= None
-        pass
+
+
+    def loadFromLine(self, line):
+        if line is None or len(line)>0:
+            pass
