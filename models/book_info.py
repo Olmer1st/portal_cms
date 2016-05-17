@@ -23,22 +23,47 @@ class BookInfo(object):
         self._date= None
         self._lang= None
         self._keywords= None
+        self._bid = None
 
 
     def load_from_line(self, line):
         if line is None or len(line)==0:
             return
-        tmp = line.split(chr(0x04))
-        self._author = tmp[0]
-        self._genre = tmp[1]
-        self._author = tmp[2]
-        self._series = tmp[3]
-        self._serno = tmp[4]
-        self._file = tmp[5]
-        self._size = tmp[6]
-        self._libid    = tmp[7]
-        self._del = tmp[8]
-        self._ext = tmp[9]
-        self._date = tmp[10]
-        self._lang = tmp[11]
-        self._keywords = tmp[12]
+
+        tmp_arr = [field.decode('utf8') if len(field)>0 else None for field in line.split(chr(0x04))]
+        self._author = tmp_arr[0]
+        self._genre = tmp_arr[1]
+        self._title = tmp_arr[2]
+        self._series = tmp_arr[3]
+        self._serno = tmp_arr[4]
+        self._file = tmp_arr[5]
+        self._size = tmp_arr[6]
+        self._libid = tmp_arr[7]
+        self._del = tmp_arr[8]
+        self._ext = tmp_arr[9]
+        self._date = tmp_arr[10]
+        self._lang = tmp_arr[11]
+        self._keywords = tmp_arr[12]
+
+    def load_from_row(self, row):
+        if row is None:
+            return
+        self._author = row[0]
+        self._genre = row[1]
+        self._title = row[2]
+        self._series = row[3]
+        self._serno = row[4]
+        self._file = row[5]
+        self._size = row[6]
+        self._libid = row[7]
+        self._del = row[8]
+        self._ext = row[9]
+        self._date = row[10]
+        self._lang = row[11]
+        self._keywords = row[12]
+        self._bid = row[13]
+
+    def file_name(self):
+        if self._file is None and  self._ext is None:
+            return ""
+        return "{0}.{1}".format(self._file,self._ext)

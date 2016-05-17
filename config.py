@@ -7,12 +7,12 @@ DB = {
     "dbname": "simple_library",
     "username": "library_admin",
     "password": "123456",
-    "main_table": "book_data",
+    "main_table": "books_data",
     "charset": "utf8"
 }
 
 LIBRARY = {
-    "archives_path": "/media/olmer/Documents - HDD4/_Lib.rus.ec - Официальная/lib.rus.ec",
-    "inpx_file": "/media/olmer/Documents - HDD4/_Lib.rus.ec - Официальная/librusec_local_fb2.inpx",
-    "library_files":"/media/olmer/Documents - HDD4/library_files"
+    "archives_path": "/media/olmer/Documents - HDD42/_Lib.rus.ec - Официальная/lib.rus.ec",
+    "inpx_file": "/media/olmer/Documents - HDD42/_Lib.rus.ec - Официальная/librusec_local_fb2.inpx",
+    "library_files":"/home/olmer/library_files"
 }
