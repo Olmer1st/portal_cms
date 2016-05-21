@@ -73,6 +73,9 @@ def start_process():
         parse_inpx(inpx)
         print "end of process"
 
+def stop_process():
+    global books_manager
+    books_manager.close()
 
 if __name__ == "__main__":
     start_process()

@@ -77,10 +77,14 @@ class Books(object):
             self.db.rollback()
 
     def close(self):
-        if self.db is not None:
-            if self.cursor is not None:
-                self.cursor.close()
-            self.db.close()
+        try:
+            if self.db is not None:
+                if self.cursor is not None:
+                    self.cursor.close()
+                    del self.cursor
+                self.db.close()
+        except:
+            pass
 
     def __enter__(self):
         return self
