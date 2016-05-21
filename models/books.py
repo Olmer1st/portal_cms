@@ -22,10 +22,11 @@ class Books(object):
 
     def find_by_bid(self, bid):
         info = None
-        sql = u"SELECT AUTHOR,GENRE,TITLE,SERIES,SERNO,FILE,SIZE,LIBID,DEL,EXT,DATE,LANG,KEYWORDS,BID FROM {0} WHERE BID = {1}".format(
-            cfg.DB["main_table"], bid)
+        sql = u"SELECT AUTHOR,GENRE,TITLE,SERIES,SERNO,FILE,SIZE,LIBID,DEL,EXT,DATE,LANG,LIBRATE,KEYWORDS,BID FROM {} WHERE BID = %s".format(
+            cfg.DB["main_table"])
+
         try:
-            self.cursor.execute(sql)
+            self.cursor.execute(sql, (bid))
             row = self.cursor.fetchone()
             info = book_info.BookInfo()
             info.load_from_row(row)
@@ -36,40 +37,49 @@ class Books(object):
 
     def find_by_file(self, libid, filename):
         info = None
-        sql = u"SELECT AUTHOR,GENRE,TITLE,SERIES,SERNO,FILE,SIZE,LIBID,DEL,EXT,DATE,LANG,KEYWORDS,BID FROM {0} WHERE LIBID = {1} AND  FILE = {2}".format(
-            cfg.DB["main_table"], libid, filename)
+        sql = u"SELECT AUTHOR,GENRE,TITLE,SERIES,SERNO,FILE,SIZE,LIBID,DEL,EXT,DATE,LANG,LIBRATE,KEYWORDS,BID FROM {} WHERE LIBID = %s AND  FILE = %s".format(
+            cfg.DB["main_table"])
         try:
-            self.cursor.execute(sql)
+            self.cursor.execute(sql, (int(libid), int(filename)))
             row = self.cursor.fetchone()
             info = book_info.BookInfo()
             info.load_from_row(row)
 
-        except:
-            print "Error: unable to fecth data"
+        except Exception as error:
+            print "Error: unable to fecth data %s" % error
         return info
 
     def save_book(self, info):
         if info is None:
             return
         id = None
-        sql = u"INSERT INTO {0}(AUTHOR,GENRE,TITLE,SERIES,SERNO,FILE,SIZE,LIBID,DEL,EXT,DATE,LANG,KEYWORDS) VALUES ('{1}','{2}','{3}','{4}',{5},{6},{7},{8},{9},'{10}','{11}','{12}','{13}')".format(
-            cfg.DB["main_table"], info._author,
-            info._genre, info._title,
-            info._series if info._series is not None else '', info._serno if info._serno is not None else 'NULL',
-            info._file, info._size, info._libid,
-            info._del if info._del is not None else 'NULL', info._ext, info._date,
-            info._lang, info._keywords if info._keywords is not None else '')
+        sql = u"INSERT INTO {} (AUTHOR,GENRE,TITLE,SERIES,SERNO,FILE,SIZE,LIBID,DEL,EXT,DATE,LANG,LIBRATE,KEYWORDS) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s ,%s)".format(
+            cfg.DB["main_table"])
 
         try:
-            self.cursor.execute(sql)
+            self.cursor.execute(sql, info.get_data())
             self.db.commit()
             id = self.cursor.lastrowid
         except:
             self.db.rollback()
         return id
 
+    def update_book(self, info, bid):
+        if info is None or bid is None:
+            return
+        sql = u"UPDATE {} SET DEL = %s,LIBRATE = %s, KEYWORDS = %s WHERE BID = %s".format(cfg.DB["main_table"])
+
+        try:
+            self.cursor.execute(sql, (info._del, info._librate, info._keywords, bid))
+            self.db.commit()
+        except Exception as error:
+            # print(error)
+            self.db.rollback()
+
     def close(self):
         if self.db is not None:
+            if self.cursor is not None:
+                self.cursor.close()
             self.db.close()
 
     def __enter__(self):

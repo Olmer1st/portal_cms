@@ -3,12 +3,10 @@
 
 import config as cfg
 
-
-"""AUTHOR;GENRE;TITLE;SERIES;SERNO;FILE;SIZE;LIBID;DEL;EXT;DATE;LANG;KEYWORDS"""
+"""AUTHOR;GENRE;TITLE;SERIES;SERNO;FILE;SIZE;LIBID;DEL;EXT;DATE;LANG;LIBRATE;KEYWORDS;"""
 
 
 class BookInfo(object):
-
     def __init__(self):
         self._author = None
         self._genre = None
@@ -17,20 +15,20 @@ class BookInfo(object):
         self._serno = None
         self._file = None
         self._size = None
-        self._libid= None
-        self._del= None
-        self._ext= None
-        self._date= None
-        self._lang= None
-        self._keywords= None
+        self._libid = None
+        self._del = None
+        self._ext = None
+        self._date = None
+        self._lang = None
+        self._librate = None
+        self._keywords = None
         self._bid = None
 
-
     def load_from_line(self, line):
-        if line is None or len(line)==0:
+        if line is None or len(line) == 0:
             return
 
-        tmp_arr = [field.decode('utf8') if len(field)>0 else None for field in line.split(chr(0x04))]
+        tmp_arr = [field.decode('utf8') if len(field) > 0 else None for field in line.split(chr(0x04))]
         self._author = tmp_arr[0]
         self._genre = tmp_arr[1]
         self._title = tmp_arr[2]
@@ -43,7 +41,8 @@ class BookInfo(object):
         self._ext = tmp_arr[9]
         self._date = tmp_arr[10]
         self._lang = tmp_arr[11]
-        self._keywords = tmp_arr[12]
+        self._librate = tmp_arr[12]
+        self._keywords = tmp_arr[13]
 
     def load_from_row(self, row):
         if row is None:
@@ -60,10 +59,15 @@ class BookInfo(object):
         self._ext = row[9]
         self._date = row[10]
         self._lang = row[11]
-        self._keywords = row[12]
-        self._bid = row[13]
+        self._librate = row[12]
+        self._keywords = row[13]
+        self._bid = row[14]
 
     def file_name(self):
-        if self._file is None and  self._ext is None:
+        if self._file is None and self._ext is None:
             return ""
-        return "{0}.{1}".format(self._file,self._ext)
+        return "{0}.{1}".format(self._file, self._ext)
+
+    def get_data(self):
+        return (self._author, self._genre, self._title, self._series, self._serno, self._file, self._size,
+                self._libid, self._del, self._ext, self._lang, self._librate, self._keywords)
