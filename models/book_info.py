@@ -70,4 +70,4 @@ class BookInfo(object):
 
     def get_data(self):
         return (self._author, self._genre, self._title, self._series, self._serno, self._file, self._size,
-                self._libid, self._del, self._ext, self._lang, self._librate, self._keywords)
+                self._libid, self._del, self._ext, self._date , self._lang, self._librate, self._keywords)

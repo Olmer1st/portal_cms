@@ -60,7 +60,7 @@ class Books(object):
             self.cursor.execute(sql, info.get_data())
             self.db.commit()
             id = self.cursor.lastrowid
-        except:
+        except Exception as error:
             self.db.rollback()
         return id
 
