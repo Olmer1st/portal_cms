@@ -13,11 +13,14 @@ books_manager = None
 
 def extract_file(zip, path, filename):
     # print "extract file from zip and create new archive"
-    newpath = zip.extract(filename, path)
-    zipfile_path = "{0}{1}".format(newpath, ".zip")
-    with zipfile.ZipFile(zipfile_path, 'w', zipfile.ZIP_DEFLATED) as myzip:
-        myzip.write(newpath, filename)
-    os.remove(newpath)
+    try:
+        newpath = zip.extract(filename, path)
+        zipfile_path = "{0}{1}".format(newpath, ".zip")
+        with zipfile.ZipFile(zipfile_path, 'w', zipfile.ZIP_DEFLATED) as myzip:
+            myzip.write(newpath, filename)
+        os.remove(newpath)
+    except Exception as error:
+        print(error)
 
 
 def create_folder(filename):
@@ -59,6 +62,7 @@ def parse_inpx(inpx):
                             extract_file(zip, path, "{0}.{1}".format(info._file, info._ext))
                     else:
                         books_manager.update_book(info, fnd_info._bid)
+            zip.close()
 
 
 def open_inpx():
@@ -71,6 +75,7 @@ def start_process():
     with books.Books() as books_manager:
         inpx = open_inpx()
         parse_inpx(inpx)
+        inpx.close()
         print "end of process"
 
 def stop_process():
