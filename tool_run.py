@@ -10,9 +10,15 @@ def signal_handler(signal, frame):
     ed.stop_process()
     sys.exit(0)
 
+def main(args):
+    ed.start_process()
 
-signal.signal(signal.SIGINT, signal_handler)
-ed.start_process()
-print('Press Ctrl+C')
-signal.pause()
+if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
+    main(sys.argv)
+    print('Press Ctrl+C')
+    signal.pause()
+
+
+
 

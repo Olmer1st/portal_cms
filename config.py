@@ -8,6 +8,7 @@ DB = {
     "username": "library_admin",
     "password": "123456",
     "main_table": "books_data",
+    "inp_table": "inp_list",
     "charset": "utf8"
 }
 

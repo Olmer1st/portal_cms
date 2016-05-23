@@ -5,7 +5,8 @@ import config as cfg
 import book_info
 import MySQLdb
 
-"""AUTHOR;GENRE;TITLE;SERIES;SERNO;FILE;SIZE;LIBID;DEL;EXT;DATE;LANG;KEYWORDS;<CR><LF>"""
+"""books_data: AUTHOR;GENRE;TITLE;SERIES;SERNO;FILE;SIZE;LIBID;DEL;EXT;DATE;LANG;LIBRATE;KEYWORDS;ETC
+   inp_list: INP_ID, INP_NAME, INSERTED"""
 
 
 class Books(object):
@@ -19,6 +20,43 @@ class Books(object):
 
     def find_by_name(self):
         pass
+
+    def is_inp_exist(self, name):
+        sql = "SELECT INP_ID FROM {0} WHERE INP_NAME = '{1}' AND STATUS='1'".format(cfg.DB["inp_table"],name)
+        try:
+            self.cursor.execute(sql)
+            row = self.cursor.fetchone()
+            if row is not None and row[0] is not None:
+               return True
+
+        except Exception as error:
+            pass
+            # print "Error: unable to fecth data %s" % error
+
+        return False
+
+    def add_inp(self, name):
+        id = None
+        sql = "INSERT INTO {0} (INP_NAME) VALUES('{1}')".format(cfg.DB["inp_table"],name)
+        try:
+            self.cursor.execute(sql)
+            self.db.commit()
+            id = self.cursor.lastrowid
+        except Exception as error:
+            # print error
+            self.db.rollback()
+        return id
+
+    def update_inp(self, inp_id):
+        if inp_id is None:
+            return
+        sql = "UPDATE {} SET STATUS=%s WHERE INP_ID=%s".format(cfg.DB["inp_table"])
+        try:
+            self.cursor.execute(sql, ('1', inp_id))
+            self.db.commit()
+        except Exception as error:
+            # print error
+            self.db.rollback()
 
     def find_by_bid(self, bid):
         info = None

@@ -49,7 +49,8 @@ def parse_inpx(inpx):
         if inp.filename.startswith("fb2"):
             doc = inpx.read(inp.filename)
             zip = find_zip(inp.filename)
-            if doc is not None and zip is not None:
+            if doc is not None and zip is not None and not books_manager.is_inp_exist(inp.filename):
+                inp_id= books_manager.add_inp(inp.filename)
                 path = create_folder(inp.filename)
                 lines = doc.splitlines()
                 for j in trange(len(lines)):
@@ -62,6 +63,7 @@ def parse_inpx(inpx):
                             extract_file(zip, path, "{0}.{1}".format(info._file, info._ext))
                     else:
                         books_manager.update_book(info, fnd_info._bid)
+                books_manager.update_inp(inp_id)
             zip.close()
 
 
