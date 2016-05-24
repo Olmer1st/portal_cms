@@ -105,10 +105,10 @@ class Books(object):
     def update_book(self, info, bid):
         if info is None or bid is None:
             return
-        sql = u"UPDATE {} SET AUTHOR = %s, DEL = %s, LIBRATE = %s, KEYWORDS = %s, UPDATED = CURRENT_TIMESTAMP WHERE BID = %s".format(cfg.DB["main_table"])
+        sql = u"UPDATE {} SET AUTHOR = %s, TITLE=%s, GENRES=%s, DEL = %s, LIBRATE = %s, KEYWORDS = %s, UPDATED = CURRENT_TIMESTAMP WHERE BID = %s".format(cfg.DB["main_table"])
 
         try:
-            self.cursor.execute(sql, (info._author, info._del, info._librate, info._keywords, bid))
+            self.cursor.execute(sql, (info._author, info._title, info._genres, info._del, info._librate, info._keywords, bid))
             self.db.commit()
         except Exception as error:
             # print(error)
