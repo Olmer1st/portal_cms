@@ -9,6 +9,8 @@ DB = {
     "password": "123456",
     "main_table": "books_data",
     "inp_table": "inp_list",
+    "authors_table": "books_authors",
+    "genres_table": "books_genres",
     "charset": "utf8"
 }
 

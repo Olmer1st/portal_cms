@@ -15,6 +15,31 @@ class Books(object):
                                   charset=cfg.DB["charset"])
         self.cursor = self.db.cursor()
 
+    def insert_author(self, author_name):
+        id = None
+        sql = u"INSERT INTO {0} (FULLNAME) VALUES('{1}')".format(cfg.DB["authors_table"], author_name)
+        try:
+            self.cursor.execute(sql)
+            self.db.commit()
+            id = self.cursor.lastrowid
+        except Exception as error:
+            # print error
+            self.db.rollback()
+        return id
+
+    def get_authors_from_books(self):
+        sql = "SELECT DISTINCT AUTHOR FROM {0}".format(cfg.DB["main_table"])
+        rows = None
+        try:
+            self.cursor.execute(sql)
+            rows = self.cursor.fetchall()
+
+        except Exception as error:
+            pass
+            # print "Error: unable to fecth data %s" % error
+
+        return rows
+
     def find_by_author(self):
         pass
 

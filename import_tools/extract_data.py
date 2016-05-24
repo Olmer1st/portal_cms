@@ -9,6 +9,16 @@ import models.books as books
 from tqdm import trange
 
 books_manager = None
+# TODO - cont save authors might be split for details
+def create_authors_table():
+    global books_manager
+    authors_list = books_manager.get_authors_from_books()
+    lst_len=len(authors_list)
+    if authors_list is not None and lst_len>0:
+        for i in trange(lst_len, desc='fill authors table'):
+            author_name = authors_list[i]
+            if author_name:
+                tmp_arr = author_name.split(":")
 
 
 def extract_file(zip, path, filename):
