@@ -15,8 +15,8 @@ DB = {
 }
 
 LIBRARY = {
-    "archives_path": "/media/olmer/Documents - HDD42/_Lib.rus.ec - Официальная/lib.rus.ec",
-    "inpx_file": "/media/olmer/Documents - HDD42/_Lib.rus.ec - Официальная/librusec_local_fb2.inpx",
+    "archives_path": "/media/olmer/Documents - HDD4/_Lib.rus.ec - Официальная/lib.rus.ec",
+    "inpx_file": "/media/olmer/Documents - HDD4/_Lib.rus.ec - Официальная/librusec_local_fb2.inpx",
     "library_files": "/home/olmer/library_files"
 }
 

@@ -9,16 +9,21 @@ import models.books as books
 from tqdm import trange
 
 books_manager = None
-# TODO - cont save authors might be split for details
+
+
 def create_authors_table():
     global books_manager
     authors_list = books_manager.get_authors_from_books()
-    lst_len=len(authors_list)
-    if authors_list is not None and lst_len>0:
+    lst_len = len(authors_list)
+    if authors_list is not None and lst_len > 0:
         for i in trange(lst_len, desc='fill authors table'):
             author_name = authors_list[i]
             if author_name:
-                tmp_arr = author_name.split(":")
+                tmp_arr = [field.replace(",", " ").rstrip() if len(field) > 0 else None for field in
+                           author_name[0].split(":")]
+                for author in tmp_arr:
+                    if author and not books_manager.is_author_exist(author):
+                        books_manager.insert_author(author)
 
 
 def extract_file(zip, path, filename):
@@ -52,6 +57,8 @@ def find_zip(filename):
 
 def parse_inpx(inpx):
     global books_manager
+    if inpx is None:
+        return
     # print "parse inpx file"
     infolist = inpx.infolist()
     for i in trange(len(infolist), desc='parse inpx file'):
@@ -60,7 +67,7 @@ def parse_inpx(inpx):
             doc = inpx.read(inp.filename)
             zip = find_zip(inp.filename)
             if doc is not None and zip is not None and not books_manager.is_inp_exist(inp.filename):
-                inp_id= books_manager.add_inp(inp.filename)
+                inp_id = books_manager.add_inp(inp.filename)
                 path = create_folder(inp.filename)
                 lines = doc.splitlines()
                 for j in trange(len(lines)):
@@ -79,7 +86,12 @@ def parse_inpx(inpx):
 
 def open_inpx():
     print "open inpx file"
-    return zipfile.ZipFile(cfg.LIBRARY["inpx_file"], 'r')
+    zip_inpx = None
+    try:
+        zip_inpx = zipfile.ZipFile(cfg.LIBRARY["inpx_file"], 'r')
+    except:
+        pass
+    return zip_inpx
 
 
 def start_process():
@@ -87,12 +99,16 @@ def start_process():
     with books.Books() as books_manager:
         inpx = open_inpx()
         parse_inpx(inpx)
-        inpx.close()
+        if inpx:
+            inpx.close()
+        create_authors_table()
         print "end of process"
+
 
 def stop_process():
     global books_manager
     books_manager.close()
+
 
 if __name__ == "__main__":
     start_process()

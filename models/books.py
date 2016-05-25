@@ -15,6 +15,20 @@ class Books(object):
                                   charset=cfg.DB["charset"])
         self.cursor = self.db.cursor()
 
+    def is_author_exist(self, author_name):
+        sql = u"SELECT AID FROM {0} WHERE FULLNAME = '{1}'".format(cfg.DB["authors_table"], author_name)
+        try:
+            self.cursor.execute(sql)
+            row = self.cursor.fetchone()
+            if row is not None and row[0] is not None:
+                return True
+
+        except Exception as error:
+            pass
+            # print "Error: unable to fecth data %s" % error
+
+        return False
+
     def insert_author(self, author_name):
         id = None
         sql = u"INSERT INTO {0} (FULLNAME) VALUES('{1}')".format(cfg.DB["authors_table"], author_name)
@@ -47,12 +61,12 @@ class Books(object):
         pass
 
     def is_inp_exist(self, name):
-        sql = "SELECT INP_ID FROM {0} WHERE INP_NAME = '{1}' AND STATUS='1'".format(cfg.DB["inp_table"],name)
+        sql = "SELECT INP_ID FROM {0} WHERE INP_NAME = '{1}' AND STATUS='1'".format(cfg.DB["inp_table"], name)
         try:
             self.cursor.execute(sql)
             row = self.cursor.fetchone()
             if row is not None and row[0] is not None:
-               return True
+                return True
 
         except Exception as error:
             pass
@@ -62,7 +76,7 @@ class Books(object):
 
     def add_inp(self, name):
         id = None
-        sql = "INSERT INTO {0} (INP_NAME) VALUES('{1}')".format(cfg.DB["inp_table"],name)
+        sql = "INSERT INTO {0} (INP_NAME) VALUES('{1}')".format(cfg.DB["inp_table"], name)
         try:
             self.cursor.execute(sql)
             self.db.commit()
@@ -130,10 +144,12 @@ class Books(object):
     def update_book(self, info, bid):
         if info is None or bid is None:
             return
-        sql = u"UPDATE {} SET AUTHOR = %s, TITLE=%s, GENRE=%s, DEL = %s, LIBRATE = %s, KEYWORDS = %s, UPDATED = CURRENT_TIMESTAMP WHERE BID = %s".format(cfg.DB["main_table"])
+        sql = u"UPDATE {} SET AUTHOR = %s, TITLE=%s, GENRE=%s, DEL = %s, LIBRATE = %s, KEYWORDS = %s, UPDATED = CURRENT_TIMESTAMP WHERE BID = %s".format(
+            cfg.DB["main_table"])
 
         try:
-            self.cursor.execute(sql, (info._author, info._title, info._genre, info._del, info._librate, info._keywords, bid))
+            self.cursor.execute(sql,
+                                (info._author, info._title, info._genre, info._del, info._librate, info._keywords, bid))
             self.db.commit()
         except Exception as error:
             # print(error)
