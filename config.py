@@ -25,10 +25,11 @@ PCLOUD = {
     "client_secret": "XnuHTHSaCBQ4RJtl3vyYxm2R2rok",
     "access_token": "fAJLZR3Qp2U2jzLzZCKltq7ZqARlEFYiSmuXklWlY83PkR8Y3zgk",
     "authorize_url": "https://my.pcloud.com/oauth2/authorize",
-    "api_url": "https://api.pcloud.com/",
+    "api_url": "https://api.pcloud.com",
     "redirect_uri": "http://localhost:5000/getcode",
     "methods": {
         "o2token": {"name": "oauth2_token"},
-        "listfolder": {"name": "listfolder", "params": {"path": "/"}}
+        "listfolder": {"name": "listfolder", "params": {"path": "/"}},
+        "getfilelink": {"name": "getfilelink", "params": {"path": "/%s/%s"}}
     }
 }
