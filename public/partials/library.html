@@ -1,10 +1,21 @@
 <table class="width100">
     <tr>
-        <td class="width20 aligned-top padding10" ng-if="categories.isOpen">
-            <ng-include src="'public/partials/templates/categories.html'"></ng-include>
+        <td class="width20 aligned-top padding10 slide-left" ng-if="leftBar.isOpen">
+            <div ui-view="leftside"></div>
         </td>
         <td class="aligned-top padding10">
-            <ng-include src="'public/partials/templates/page.html'"></ng-include>
+            <div class="btn-toolbar">
+                <a class="btn btn-default btn-lg" ng-click="leftBar.isOpen = !leftBar.isOpen">
+                    <span class="glyphicon"
+                          ng-class="leftBar.isOpen?'glyphicon-eye-close': 'glyphicon-eye-open'"></span>
+                </a>
+                <a ng-click="executeState($index)" class="btn btn-lg"
+                   ng-class="button.active?'btn-primary':'btn-default'" ng-repeat="button in buttons">{{button.title}}</a>
+            </div>
+
+            <br/>
+            <div ui-view="books"></div>
         </td>
     </tr>
 </table>
+

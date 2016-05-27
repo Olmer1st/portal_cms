@@ -1,5 +1,5 @@
 "use strict";
-var main_app = angular.module('main_app', ['ngSanitize','ui.router', 'ui.bootstrap', 'ngCookies']);
+var main_app = angular.module('main_app', [ 'ngCookies','ngAnimate','ngSanitize','ui.router', 'ui.bootstrap']);
 
 
 main_app.config(function ($locationProvider) {
@@ -17,6 +17,50 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
                 url: '/library',
                 templateUrl: 'public/partials/library.html',
                 controller: 'libraryController'
+            })
+            .state('library.authors', {
+                url: '/authors',
+                views:{
+                    'leftside':{
+                         templateUrl: 'public/partials/templates/authors.html',
+                    },
+                    'books':{
+                         templateUrl: 'public/partials/templates/books.html',
+                    }
+                }
+            })
+            .state('library.genres', {
+                url: '/genres',
+                views:{
+                    'leftside':{
+                         templateUrl: 'public/partials/templates/genres.html',
+                    },
+                    'books':{
+                         templateUrl: 'public/partials/templates/books.html',
+                    }
+                }
+            })
+            .state('library.series', {
+                url: '/series',
+                views:{
+                    'leftside':{
+                         templateUrl: 'public/partials/templates/series.html',
+                    },
+                    'books':{
+                         templateUrl: 'public/partials/templates/books.html',
+                    }
+                }
+            })
+            .state('library.search', {
+                url: '/search',
+                views:{
+                    'leftside':{
+                         templateUrl: 'public/partials/templates/search.html',
+                    },
+                    'books':{
+                         templateUrl: 'public/partials/templates/books.html',
+                    }
+                }
             })
             .state('login', {
                 url: '/login',
