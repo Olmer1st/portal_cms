@@ -1,0 +1,33 @@
+body{
+    padding: 5px;
+}
+.brand{
+    width:48px;
+    height: auto;
+}
+
+.width100{
+    width:100%;
+}
+
+.width20{
+    width:20%;
+}
+
+.aligned-top{
+    vertical-align: top;
+}
+
+.padding10{
+    padding:10px;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+
+
+.nolisttype{
+    list-style-type: none !important;
+}
