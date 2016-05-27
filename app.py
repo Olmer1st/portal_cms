@@ -8,15 +8,26 @@ import config as cfg
 from flask import Flask, redirect, request, jsonify, render_template, render_template_string
 from middleware.authentication import Authentication
 from pcloud.service import PCloudService
+from models.authors import Authors
 
 app = Flask(__name__, template_folder='public', static_folder='public')
+app.config['JSON_AS_ASCII'] = False
 auth = Authentication()
 
 
-@app.route('/',  defaults={'p': 'home'})
+@app.route('/', defaults={'p': 'home'})
 @app.route('/<path:p>')
 def main(p):
     return render_template("index.html")
+
+
+@app.route('/api/v1/authors/search/<path:s>')
+def find_author(s):
+    data = None
+    with Authors() as authors_manager:
+        data = authors_manager.find_by_fullname(s)
+    return jsonify(data)
+
 
 @app.route('/test')
 def test():

@@ -20,21 +20,26 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         title: "Search",
         active: false
     }];
-    $scope.init = function(){
-        var defaultButton =  $scope.buttons.find(function(item){
-            return item.active;
-        }) || $scope.buttons[0];
+    
+    $scope.init = function () {
+        var defaultButton = $scope.buttons.find(function (item) {
+                return item.active;
+            }) || $scope.buttons[0];
 
         $state.go(defaultButton.name);
     };
     $scope.init();
-    $scope.executeState = function($index){
-        for(var i=0;i<$scope.buttons.length;i++){
-            if(i != $index){
-                $scope.buttons[i].active = false;
+
+    $scope.executeState = function ($index) {
+        $rootScope.safeApply(function () {
+            for (var i = 0; i < $scope.buttons.length; i++) {
+                if (i != $index) {
+                    $scope.buttons[i].active = false;
+                }
             }
-        }
-        $scope.buttons[$index].active = true;
-        $state.go( $scope.buttons[$index].name);
+            $scope.buttons[$index].active = true;
+            $state.go($scope.buttons[$index].name);
+        });
+
     };
 });

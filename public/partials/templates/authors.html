@@ -3,6 +3,20 @@
         <h3 class="panel-title">Find author</h3>
     </div>
     <div class="panel-body">
-        Authors list
+        <div class="search-box" ng-init="searchHover=false" ng-mouseleave="searchHover = false"
+             ng-mouseover="searchHover = true">
+            <input type="text" ng-model="searchParam" class="form-control input-lg relative"/>
+            <span ng-if="searchHover" class="glyphicon glyphicon-remove absolute pointer"
+                  style="font-size: larger;top:18px;right:45px;" ng-click="clearSearch()"></span>
+            <span class="glyphicon glyphicon-search absolute pointer" style="font-size: larger;top:18px;right:20px;"
+                  ng-click="executeSearch()"></span>
+        </div>
+        <floating-loader ng-if="loadingData"></floating-loader>
+        <div>
+            <ul>
+                <li ng-repeat="author in authors">{{author[1]}}</li>
+            </ul>
+        </div>
+
     </div>
 </div>
