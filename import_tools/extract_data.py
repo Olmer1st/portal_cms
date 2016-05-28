@@ -11,19 +11,55 @@ from tqdm import trange
 books_manager = None
 
 
-def create_authors_table():
+def parse_multiple_value(value):
+    tmp_arr = [field.replace(",", " ").rstrip() if len(field) > 0 else None for field in
+               value.split(":")]
+    return tmp_arr
+
+
+def work_on_author(info):
     global books_manager
-    authors_list = books_manager.get_authors_from_books()
-    lst_len = len(authors_list)
-    if authors_list is not None and lst_len > 0:
-        for i in trange(lst_len, desc='fill authors table'):
-            author_name = authors_list[i]
-            if author_name:
-                tmp_arr = [field.replace(",", " ").rstrip() if len(field) > 0 else None for field in
-                           author_name[0].split(":")]
-                for author in tmp_arr:
-                    if author and not books_manager.is_author_exist(author):
-                        books_manager.insert_author(author)
+    if info and info._author:
+        for author in parse_multiple_value(info._author):
+            if author:
+                aid = books_manager.is_author_exist(author)
+                if aid is None:
+                    aid = books_manager.insert_author(author)
+                books_manager.insert_author2book(aid, info._bid)
+
+
+def work_on_serie(info):
+    global books_manager
+    if info and info._series is not None and len(info._series) > 0:
+        sid = books_manager.is_serie_exist(info._series)
+        if sid is None:
+            sid = books_manager.insert_serie(info._series)
+        books_manager.insert_serie2book(sid, info._bid, info._serno)
+
+
+def work_on_genre(info):
+    global books_manager
+    if info and info._genre:
+        for genre in parse_multiple_value(info._genre):
+            if genre:
+                gid = books_manager.is_genre_exist(genre)
+                books_manager.insert_genre2book(gid, info._bid)
+
+
+def create_all_tables():
+    global books_manager
+    all_books = books_manager.get_all_books()
+    lst_len = len(all_books)
+    if all_books is not None and lst_len > 0:
+        for i in trange(lst_len, desc='fill other tables'):
+            info = book_info.BookInfo()
+            info.load_from_row_partial(all_books[i])
+            # authors
+            work_on_author(info)
+            # series
+            work_on_serie(info)
+            # genres
+            work_on_genre(info)
 
 
 def extract_file(zip, path, filename):
@@ -74,12 +110,27 @@ def parse_inpx(inpx):
                     line = lines[j]
                     info = book_info.BookInfo()
                     info.load_from_line(line)
+                    info.set_path(inp.filename.replace(".inp", ""))
                     fnd_info = books_manager.find_by_file(info._libid, info._file)
                     if fnd_info is None or fnd_info._bid is None:
-                        if books_manager.save_book(info) is not None:
+                        bid = books_manager.save_book(info)
+                        if  bid is not None:
+                            info.set_bid(bid)
                             extract_file(zip, path, "{0}.{1}".format(info._file, info._ext))
-                    else:
-                        books_manager.update_book(info, fnd_info._bid)
+                            # authors
+                            work_on_author(info)
+                            # series
+                            work_on_serie(info)
+                            # genres
+                            work_on_genre(info)
+                    # else:
+                    #     # authors
+                    #     work_on_author(fnd_info)
+                    #     # series
+                    #     work_on_serie(fnd_info)
+                    #     # genres
+                    #     work_on_genre(fnd_info)
+                    #     books_manager.update_book(info, fnd_info._bid)
                 books_manager.update_inp(inp_id)
             zip.close()
 
@@ -101,7 +152,7 @@ def start_process():
         parse_inpx(inpx)
         if inpx:
             inpx.close()
-        create_authors_table()
+        #   create_all_tables()
         print "end of process"
 
 

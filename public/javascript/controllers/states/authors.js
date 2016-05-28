@@ -2,13 +2,14 @@
 main_app.controller("authors", function ($scope, $rootScope, $state, apiService) {
     var libraryScope = $scope.$parent;
     var mainScope = libraryScope.$parent;
+    
     $scope.searchParam = '';
     $scope.authors = [];
     $scope.loadingData = false;
+
     $scope.clearSearch = function () {
         $rootScope.safeApply(function () {
             $scope.searchParam = '';
-            $scope.loadingData = false;
         });
 
     };
@@ -16,20 +17,27 @@ main_app.controller("authors", function ($scope, $rootScope, $state, apiService)
     $scope.executeSearch = function () {
         $scope.authors = [];
         if (!$scope.searchParam) return;
-        $scope.loadingData = true;
+        LoadingData(true);
         var promise = apiService.searchForAuthor($scope.searchParam);
         promise.then(function (result) {
-            if (!result || result.error) {
-                $scope.loadingData =false;
-                return;
+            if (result && !result.error) {
+                $rootScope.safeApply(function () {
+                    $scope.authors = result.rows;
+                });
             }
-            $rootScope.safeApply(function () {
-                $scope.authors = result.rows;
-                $scope.loadingData = false
-            });
+            LoadingData(false);
 
         }, function (reason) {
-            $scope.loadingData = false;
+            LoadingData(false);
         });
     };
+    $scope.findBooksOfAuthor = function (aid) {
+        libraryScope.findBooksOfAuthor(aid);
+    };
+
+    function LoadingData(status) {
+        $rootScope.safeApply(function () {
+            $scope.loadingData = status
+        });
+    }
 });

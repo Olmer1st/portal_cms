@@ -22,6 +22,7 @@ class BookInfo(object):
         self._lang = None
         self._librate = None
         self._keywords = None
+        self._path = None
         self._bid = None
 
     def load_from_line(self, line):
@@ -61,7 +62,24 @@ class BookInfo(object):
         self._lang = row[11]
         self._librate = row[12]
         self._keywords = row[13]
-        self._bid = row[14]
+        self._path = row[14]
+        self._bid = row[15]
+
+    def load_from_row_partial(self, row):
+        if row is None:
+            return
+        self._bid = row[0]
+        self._author = row[1]
+        self._genre = row[2]
+        self._series = row[3]
+        self._serno = row[4]
+        self._file = row[5]
+
+    def set_path(self, path):
+        self._path = path
+
+    def set_bid(self, bid):
+        self._bid = bid
 
     def file_name(self):
         if self._file is None and self._ext is None:
@@ -70,4 +88,4 @@ class BookInfo(object):
 
     def get_data(self):
         return (self._author, self._genre, self._title, self._series, self._serno, self._file, self._size,
-                self._libid, self._del, self._ext, self._date , self._lang, self._librate, self._keywords)
+                self._libid, self._del, self._ext, self._date, self._lang, self._librate, self._keywords, self._path)

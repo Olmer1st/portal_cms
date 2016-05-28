@@ -12,9 +12,10 @@
                   ng-click="executeSearch()"></span>
         </div>
         <floating-loader ng-if="loadingData"></floating-loader>
-        <div>
+        <div style="max-height: 500px;overflow-y: auto; overflow-x: hidden;font-size: 15px;">
+            <br/>
             <ul>
-                <li ng-repeat="author in authors">{{author[1]}}</li>
+                <li ng-repeat="author in authors"><a class="pointer" ng-click="findBooksOfAuthor(author[0])">{{author[1]}}</a></li>
             </ul>
         </div>
 

@@ -9,6 +9,7 @@ from flask import Flask, redirect, request, jsonify, render_template, render_tem
 from middleware.authentication import Authentication
 from pcloud.service import PCloudService
 from models.authors import Authors
+from models.books import Books
 
 app = Flask(__name__, template_folder='public', static_folder='public')
 app.config['JSON_AS_ASCII'] = False
@@ -28,6 +29,12 @@ def find_author(s):
         data = authors_manager.find_by_fullname(s)
     return jsonify(data)
 
+@app.route('/api/v1/books/byauthor/<path:aid>')
+def find_books(aid):
+    data = None
+    with Books() as books_manager:
+        data = books_manager.find_by_author(aid)
+    return jsonify(data)
 
 @app.route('/test')
 def test():

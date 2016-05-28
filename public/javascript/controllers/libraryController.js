@@ -1,5 +1,5 @@
 "use strict";
-main_app.controller("libraryController", function ($scope, $rootScope, $location, $state) {
+main_app.controller("libraryController", function ($scope, $rootScope, $location, $state, apiService) {
     $scope.leftBar = {
         isOpen: true
     };
@@ -20,7 +20,10 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         title: "Search",
         active: false
     }];
-    
+
+    $scope.books = [];
+    $scope.loadingData = false;
+
     $scope.init = function () {
         var defaultButton = $scope.buttons.find(function (item) {
                 return item.active;
@@ -42,4 +45,28 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         });
 
     };
+
+    $scope.findBooksOfAuthor = function (aid) {
+        $scope.books = [];
+        if (!aid) return;
+        LoadingData(true);
+        var promise = apiService.searchForBooksByAuthor(aid);
+        promise.then(function (result) {
+            if (result && !result.error) {
+                $rootScope.safeApply(function () {
+                    $scope.books = result.rows;
+                });
+            }
+            LoadingData(false);
+
+        }, function (reason) {
+            LoadingData(false);
+        });
+    };
+    
+    function LoadingData(status) {
+        $rootScope.safeApply(function () {
+            $scope.loadingData = status
+        });
+    }
 });

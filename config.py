@@ -7,11 +7,22 @@ DB = {
     "dbname": "simple_library",
     "username": "library_admin",
     "password": "123456",
-    "main_table": "books_data",
+    "main_table": "lib_books",
     "inp_table": "inp_list",
-    "authors_table": "books_authors",
-    "genres_table": "books_genres",
+    "authors_table": "lib_authors",
+    "genres_table": "lib_genres",
+    "series_table": "lib_series",
+    "author2book": "lib_author2book",
+    "genre2book": "lib_genre2book",
+    "genre2group": "lib_genre2group",
+    "serie2book": "lib_serie2book",
+    "authorsByBook": "view_authorsByBook",
+    "booksByAuthor": "view_booksByAuthor",
+    "booksByGenre": "view_booksByGenre",
+    "booksBySerie": "view_booksBySerie",
+    "seriesByBook": "view_seriesByBook",
     "charset": "utf8"
+
 }
 
 LIBRARY = {

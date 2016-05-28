@@ -5,6 +5,10 @@ main_app.service('apiService', function ($http, $q) {
         return getMethod("authors/search/" + searchParam);
     };
 
+    this.searchForBooksByAuthor = function (aid) {
+        return getMethod("books/byauthor/" + aid);
+    };
+
     function getMethod(query) {
         var dfd = $q.defer();
         //console.log('get', ROOT + query);

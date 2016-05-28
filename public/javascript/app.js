@@ -10,23 +10,23 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: 'public/partials/home.html',
+            templateUrl: 'public/templates/home.html',
             controller: 'homeController'
         })
         .state('library', {
             url: '/library',
-            templateUrl: 'public/partials/library.html',
+            templateUrl: 'public/templates/library.html',
             controller: 'libraryController'
         })
         .state('library.authors', {
             url: '/authors',
             views: {
                 'leftside': {
-                    templateUrl: 'public/partials/templates/authors.html',
+                    templateUrl: 'public/templates/partials/authors.html',
                     controller: 'authors'
                 },
                 'books': {
-                    templateUrl: 'public/partials/templates/books.html',
+                    templateUrl: 'public/templates/partials/books.html',
                 }
             }
         })
@@ -34,10 +34,10 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/genres',
             views: {
                 'leftside': {
-                    templateUrl: 'public/partials/templates/genres.html',
+                    templateUrl: 'public/templates/partials/genres.html',
                 },
                 'books': {
-                    templateUrl: 'public/partials/templates/books.html',
+                    templateUrl: 'public/templates/partials/books.html',
                 }
             }
         })
@@ -45,10 +45,10 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/series',
             views: {
                 'leftside': {
-                    templateUrl: 'public/partials/templates/series.html',
+                    templateUrl: 'public/templates/partials/series.html',
                 },
                 'books': {
-                    templateUrl: 'public/partials/templates/books.html',
+                    templateUrl: 'public/templates/partials/books.html',
                 }
             }
         })
@@ -56,21 +56,21 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/search',
             views: {
                 'leftside': {
-                    templateUrl: 'public/partials/templates/search.html',
+                    templateUrl: 'public/templates/partials/search.html',
                 },
                 'books': {
-                    templateUrl: 'public/partials/templates/books.html',
+                    templateUrl: 'public/templates/partials/books.html',
                 }
             }
         })
         .state('login', {
             url: '/login',
-            templateUrl: 'public/partials/login.html',
+            templateUrl: 'public/templates/login.html',
             controller: 'loginController'
         })
         .state('admin', {
             url: '/admin',
-            templateUrl: 'public/partials/admin.html',
+            templateUrl: 'public/templates/admin.html',
             controller: 'adminController'
         });
 
