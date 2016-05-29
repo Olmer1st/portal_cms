@@ -1,5 +1,5 @@
 "use strict";
-main_app.controller("libraryController", function ($scope, $rootScope, $location, $state, apiService) {
+main_app.controller("libraryController", function ($scope, $rootScope, $location, $state, uiGridTreeViewConstants, apiService) {
     $scope.leftBar = {
         isOpen: true
     };
@@ -21,7 +21,11 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         active: false
     }];
 
-    $scope.books = [];
+    $scope.hideLeftBar= function () {
+        $scope.leftBar.isOpen = !$scope.leftBar.isOpen;
+        $scope.gridApi.grid.refresh();
+    };
+
     $scope.loadingData = false;
 
     $scope.init = function () {
@@ -54,7 +58,8 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         promise.then(function (result) {
             if (result && !result.error) {
                 $rootScope.safeApply(function () {
-                    $scope.books = result.rows;
+                    //$scope.books = result.rows;
+                    $scope.gridOptions.data = result.rows;
                 });
             }
             LoadingData(false);
@@ -63,10 +68,27 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
             LoadingData(false);
         });
     };
-    
+
     function LoadingData(status) {
         $rootScope.safeApply(function () {
             $scope.loadingData = status
         });
     }
+
+    //`AID`, `BID`, `TITLE`, `serie_name`, `serie_number`, `GENRE`, `FILE`, `EXT`, `DEL`, `LANG`, `SIZE`, `DATE`, `LIBRATE`, `KEYWORDS`, `PATH`
+    $scope.gridOptions = {
+        enableSorting: true,
+        enableFiltering: true,
+        showTreeExpandNoChildren: true,
+        columnDefs: [
+            {name: 'name', width: '50%', field:"TITLE"},
+            {name: 'ser.num', width: '10%', field: "serie_number"},
+            {name: 'size', width: '10%', field: "SIZE"},
+            {name: 'language', width: '10%', field: "LANG"},
+            {name: 'genre', width: '*', field: "GENRE"}
+        ],
+        onRegisterApi: function (gridApi) {
+            $scope.gridApi = gridApi;
+        }
+    };
 });

@@ -1,20 +1,23 @@
 <table class="width100">
     <tr>
         <td class="width25 aligned-top padding10" ng-show="leftBar.isOpen">
-            <div  class="slide-left" ng-show="leftBar.isOpen" ui-view="leftside"></div>
+            <div class="slide-left relative" ng-show="leftBar.isOpen" ui-view="leftside"></div>
         </td>
-        <td class="aligned-top padding10">
-            <div class="btn-toolbar">
-                <a class="btn btn-default btn-lg" ng-click="leftBar.isOpen = !leftBar.isOpen">
+        <td class="width75 aligned-top padding10">
+            <div class="container">
+                <div class="btn-toolbar">
+                    <a class="btn btn-default btn-lg" ng-click="hideLeftBar()">
                     <span class="glyphicon"
                           ng-class="leftBar.isOpen?'glyphicon-eye-close': 'glyphicon-eye-open'"></span>
-                </a>
-                <a ng-click="executeState($index)" class="btn btn-lg"
-                   ng-class="button.active?'btn-primary':'btn-default'" ng-repeat="button in buttons">{{button.title}}</a>
+                    </a>
+                    <a ng-click="executeState($index)" class="btn btn-lg"
+                       ng-class="button.active?'btn-primary':'btn-default'" ng-repeat="button in buttons">{{button.title}}</a>
+                </div>
+
+                <br/>
+                <div ui-view="books"></div>
             </div>
 
-            <br/>
-            <div ui-view="books"></div>
         </td>
     </tr>
 </table>

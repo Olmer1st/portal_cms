@@ -12,7 +12,7 @@ import MySQLdb
 class Books(object):
     def __init__(self):
         self.db = MySQLdb.connect(cfg.DB["servername"], cfg.DB["username"], cfg.DB["password"], cfg.DB["dbname"],
-                                  charset=cfg.DB["charset"])
+                                  charset=cfg.DB["charset"],cursorclass=MySQLdb.cursors.DictCursor)
         self.cursor = self.db.cursor()
 
     def get_all_books(self):
@@ -148,6 +148,7 @@ class Books(object):
         try:
             self.cursor.execute(sql)
             data['rows'] = self.cursor.fetchall()
+
         except:
             data['error'] = "Error: unable to fecth data"
         return data

@@ -19,6 +19,9 @@ body {
     width: 25%;
 }
 
+.width75 {
+    width: 75%;
+}
 
 .aligned-top {
     vertical-align: top;
@@ -151,4 +154,9 @@ body {
     width:100%;
     height: 100%;
     z-index: 9999999;
+}
+
+.grid {
+  width: 100%;
+  height: 600px;
 }

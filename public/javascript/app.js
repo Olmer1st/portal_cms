@@ -1,5 +1,5 @@
 "use strict";
-var main_app = angular.module('main_app', ['ngCookies', 'ngAnimate', 'ngSanitize', 'ui.router', 'ui.bootstrap']);
+var main_app = angular.module('main_app', ['ngCookies', 'ngAnimate', 'ngSanitize', 'ngTouch', 'ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.treeView']);
 
 
 main_app.config(function ($locationProvider) {
