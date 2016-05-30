@@ -75,17 +75,18 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         });
     }
 
-    //`AID`, `BID`, `TITLE`, `serie_name`, `serie_number`, `GENRE`, `FILE`, `EXT`, `DEL`, `LANG`, `SIZE`, `DATE`, `LIBRATE`, `KEYWORDS`, `PATH`
+    //AID, BID, TITLE, SERIE_NAME, SERIE_NUMBER, GENRE, FILE, EXT, DEL, LANG, SIZE, DATE, LIBRATE, KEYWORDS, PATH
     $scope.gridOptions = {
-        enableSorting: true,
-        enableFiltering: true,
-        showTreeExpandNoChildren: true,
+        enableSorting: false,
+        enableFiltering: false,
+        showTreeExpandNoChildren: false,
         columnDefs: [
-            {name: 'name', width: '50%', field:"TITLE"},
-            {name: 'ser.num', width: '10%', field: "serie_number"},
-            {name: 'size', width: '10%', field: "SIZE"},
-            {name: 'language', width: '10%', field: "LANG"},
-            {name: 'genre', width: '*', field: "GENRE"}
+            {name: 'name', width: '45%', field:"TITLE", enableColumnMenu:false},
+            {name: '#', width: '2%', field: "SERIE_NUMBER", enableColumnMenu:false},
+            {name: 'size', width: '5%', field: "SIZE", enableColumnMenu:false},
+            {name: 'lang.', width: '2%', field: "LANG",enableColumnMenu:false},
+            {name: 'date', width: '10%', field: "DATE", enableColumnMenu:false},
+            {name: 'genre', width: '*', field: "GENRE", enableColumnMenu:false}
         ],
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;

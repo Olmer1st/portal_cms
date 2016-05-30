@@ -2,22 +2,21 @@
 # coding=utf-8
 
 import config as cfg
-import MySQLdb
+from middleware.dbconnection import mysql_connection
+
+"""`lib_authors`.`AID`, `lib_authors`.`FULLNAME`, `lib_authors`.`INSERTED`"""
 
 
 class Authors(object):
     def __init__(self):
-        self.db = MySQLdb.connect(cfg.DB["servername"], cfg.DB["username"], cfg.DB["password"], cfg.DB["dbname"],
-                                  charset=cfg.DB["charset"])
-        self.cursor = self.db.cursor()
+        self.connection = mysql_connection()
 
     def is_author_exist(self, author_name):
         sql = u"SELECT AID FROM {0} WHERE FULLNAME = '{1}'".format(cfg.DB["authors_table"], author_name)
         try:
-            self.cursor.execute(sql)
-            row = self.cursor.fetchone()
-            if row is not None and row[0] is not None:
-                return True
+
+            row = self.connection.execute_fetch(sql)
+            return row is not None
 
         except Exception as error:
             pass
@@ -27,26 +26,18 @@ class Authors(object):
 
     def find_by_fullname(self, search_str):
         data = {
-            'error':None,
-            'rows':[]
+            'error': None,
+            'rows': []
         }
         sql = u"SELECT AID, FULLNAME FROM {0} WHERE FULLNAME like '%{1}%'".format(cfg.DB["authors_table"], search_str)
         try:
-            self.cursor.execute(sql)
-            data['rows'] = self.cursor.fetchall()
+            data['rows'] = self.connection.execute_fetch(sql,False)
         except Exception as error:
             data['error'] = error.message
         return data
 
     def close(self):
-        try:
-            if self.db is not None:
-                if self.cursor is not None:
-                    self.cursor.close()
-                    del self.cursor
-                self.db.close()
-        except:
-            pass
+        self.connection.close()
 
     def __enter__(self):
         return self

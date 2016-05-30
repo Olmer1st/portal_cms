@@ -10,6 +10,7 @@ from middleware.authentication import Authentication
 from pcloud.service import PCloudService
 from models.authors import Authors
 from models.books import Books
+from models.series import Series
 
 app = Flask(__name__, template_folder='public', static_folder='public')
 app.config['JSON_AS_ASCII'] = False
@@ -31,10 +32,32 @@ def find_author(s):
 
 @app.route('/api/v1/books/byauthor/<path:aid>')
 def find_books(aid):
+    result = { 'rows':[], 'error':None }
+    data = []
+    seq = {}
+    noseq = []
     with Books() as books_manager:
-        data = books_manager.find_by_author(aid)
-    
-    return jsonify(data)
+        books = books_manager.find_by_author(aid)
+    with Series() as series_manager:
+        for book in books['rows']:
+            serie = series_manager.find_serie_by_book(book['BID'])
+            if serie is None:
+                book['$$treeLevel'] = 0
+                noseq.append(book)
+            else:
+                book['$$treeLevel'] = 1
+                if serie['SID'] in seq:
+                    seq[serie['SID']]['books'].append(book)
+                else:
+                    seq[serie['SID']] = {'name': serie['SERIE_NAME'], 'books': [book]}
+
+    for value in seq.values():
+        data.append(
+            {'TITLE': value['name'], '$$treeLevel': 0})# , 'AID': None, 'BID': None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None, 'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})
+        for book in value['books']:
+            data.append(book)
+    result['rows']  = data + noseq
+    return jsonify(result)
 
 
 @app.route('/test')
