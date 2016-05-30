@@ -24,17 +24,18 @@ def main(p):
 
 @app.route('/api/v1/authors/search/<path:s>')
 def find_author(s):
-    data = None
     with Authors() as authors_manager:
-        data = authors_manager.find_by_fullname(s)
-    return jsonify(data)
+        result = authors_manager.find_by_fullname(s)
+    return jsonify(result)
+
 
 @app.route('/api/v1/books/byauthor/<path:aid>')
 def find_books(aid):
-    data = None
     with Books() as books_manager:
         data = books_manager.find_by_author(aid)
+    
     return jsonify(data)
+
 
 @app.route('/test')
 def test():
