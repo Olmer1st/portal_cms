@@ -106,7 +106,7 @@ class Books(object):
             'error': None,
             'rows': []
         }
-        sql = u"SELECT AID, BID, TITLE,  SERIE_NUMBER, GENRE, FILE, EXT, DEL, LANG, SIZE, DATE, PATH FROM {0} WHERE AID =  {1}".format(cfg.DB["booksByAuthor"], aid)
+        sql = u"SELECT * FROM {0} WHERE AID =  {1} AND DEL is NULL".format(cfg.DB["booksByAuthor"], aid)
 
         try:
             data['rows'] = self.connection.execute_fetch(sql, False)

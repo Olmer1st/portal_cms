@@ -10,11 +10,19 @@ from middleware.authentication import Authentication
 from pcloud.service import PCloudService
 from models.authors import Authors
 from models.books import Books
-from models.series import Series
+
+# from models.series import Series
 
 app = Flask(__name__, template_folder='public', static_folder='public')
 app.config['JSON_AS_ASCII'] = False
 auth = Authentication()
+
+
+def change_level(obj, level):
+    if obj:
+        obj['$$treeLevel'] = level
+
+    return obj
 
 
 @app.route('/', defaults={'p': 'home'})
@@ -32,31 +40,25 @@ def find_author(s):
 
 @app.route('/api/v1/books/byauthor/<path:aid>')
 def find_books(aid):
-    result = { 'rows':[], 'error':None }
-    data = []
-    seq = {}
-    noseq = []
-    with Books() as books_manager:
-        books = books_manager.find_by_author(aid)
-    with Series() as series_manager:
-        for book in books['rows']:
-            serie = series_manager.find_serie_by_book(book['BID'])
-            if serie is None:
-                book['$$treeLevel'] = 0
-                noseq.append(book)
-            else:
-                book['$$treeLevel'] = 1
-                if serie['SID'] in seq:
-                    seq[serie['SID']]['books'].append(book)
-                else:
-                    seq[serie['SID']] = {'name': serie['SERIE_NAME'], 'books': [book]}
+    """'AID': None, 'BID': None, 'SERIE_NAME':None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None,
+    'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
 
-    for value in seq.values():
-        data.append(
-            {'TITLE': value['name'], '$$treeLevel': 0})# , 'AID': None, 'BID': None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None, 'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})
-        for book in value['books']:
-            data.append(book)
-    result['rows']  = data + noseq
+    result = {'rows': [], 'error': None}
+    data = []
+    with Books() as books_manager:
+        books_result = books_manager.find_by_author(aid)
+
+    books = books_result['rows']
+    series = list(
+        set([book['SERIE_NAME'] for book in books if book['SERIE_NAME'] is not None and len(book['SERIE_NAME']) > 0]))
+    series.sort()
+    noseq = [change_level(book, 0) for book in books if book['SERIE_NAME'] is None or len(book['SERIE_NAME']) == 0]
+    noseq = sorted(noseq, key=lambda book: book['TITLE'])
+    for serie_name in series:
+        tmp_arr = [{'TITLE': serie_name, '$$treeLevel': 0}]
+        data = data + tmp_arr + [change_level(book, 1) for book in books if book['SERIE_NAME'] == serie_name]
+
+    result['rows'] = data + noseq
     return jsonify(result)
 
 

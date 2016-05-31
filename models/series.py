@@ -15,6 +15,12 @@ class Series(object):
         sql = u"SELECT SID,BID,SERIE_NAME,SERIE_NUMBER FROM {0} WHERE BID={1}".format(cfg.DB["seriesByBook"], bid)
         return self.connection.execute_fetch(sql)
 
+    def find_series_by_books(self, books):
+        str_list_of_books = ",".join(books)
+        sql = u"SELECT SID,BID,SERIE_NAME,SERIE_NUMBER FROM {0} WHERE BID in ({1})".format(cfg.DB["seriesByBook"],
+                                                                                           str_list_of_books)
+        return self.connection.execute_fetch(sql)
+
     def close(self):
         self.connection.close()
 
