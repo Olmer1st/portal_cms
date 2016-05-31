@@ -10,7 +10,7 @@ from middleware.authentication import Authentication
 from pcloud.service import PCloudService
 from models.authors import Authors
 from models.books import Books
-
+from utils import change_level
 # from models.series import Series
 
 app = Flask(__name__, template_folder='public', static_folder='public')
@@ -18,32 +18,23 @@ app.config['JSON_AS_ASCII'] = False
 auth = Authentication()
 
 
-def change_level(obj, level):
-    if obj:
-        obj['$$treeLevel'] = level
-
-    return obj
-
-
 @app.route('/', defaults={'p': 'home'})
 @app.route('/<path:p>')
 def main(p):
     return render_template("index.html")
 
-
-@app.route('/api/v1/authors/search/<path:s>')
+# TODO make authentication by path
+@app.route('/api/v1/library/authors/search/<path:s>')
 def find_author(s):
     with Authors() as authors_manager:
         result = authors_manager.find_by_fullname(s)
     return jsonify(result)
 
 
-@app.route('/api/v1/books/byauthor/<path:aid>')
+@app.route('/api/v1/library/books/byauthor/<path:aid>')
 def find_books(aid):
     """'AID': None, 'BID': None, 'SERIE_NAME':None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None,
     'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
-
-    result = {'rows': [], 'error': None}
     data = []
     with Books() as books_manager:
         books_result = books_manager.find_by_author(aid)
@@ -55,14 +46,14 @@ def find_books(aid):
     noseq = [change_level(book, 0) for book in books if book['SERIE_NAME'] is None or len(book['SERIE_NAME']) == 0]
     noseq = sorted(noseq, key=lambda book: book['TITLE'])
     for serie_name in series:
-        tmp_arr = [{'TITLE': serie_name, '$$treeLevel': 0}]
+        tmp_arr = [change_level({'TITLE': serie_name},0)]
         data = data + tmp_arr + [change_level(book, 1) for book in books if book['SERIE_NAME'] == serie_name]
 
-    result['rows'] = data + noseq
-    return jsonify(result)
+    books_result['rows'] = data + noseq
+    return jsonify(books_result)
 
 
-@app.route('/test')
+@app.route('/api/v1/public/test')
 def test():
     jdata = PCloudService.get_link("fb2-000024-030559", "24.fb2.zip")
     if jdata and jdata["result"] is 0:

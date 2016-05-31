@@ -44,3 +44,7 @@ PCLOUD = {
         "getfilelink": {"name": "getfilelink", "params": {"path": "/%s/%s"}}
     }
 }
+
+GLOBAL = {
+    "secret_key": "lib.rus.ec.forever"
+}

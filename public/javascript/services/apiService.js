@@ -2,11 +2,11 @@
 main_app.service('apiService', function ($http, $q) {
     var ROOT = "/api/v1/";
     this.searchForAuthor = function (searchParam) {
-        return getMethod("authors/search/" + searchParam);
+        return getMethod("library/authors/search/" + searchParam);
     };
 
     this.searchForBooksByAuthor = function (aid) {
-        return getMethod("books/byauthor/" + aid);
+        return getMethod("library/books/byauthor/" + aid);
     };
 
     function getMethod(query) {
