@@ -11,6 +11,8 @@ from pcloud.service import PCloudService
 from models.authors import Authors
 from models.books import Books
 from utils import change_level
+from models.users import Users
+
 # from models.series import Series
 
 app = Flask(__name__, template_folder='public', static_folder='public')
@@ -22,6 +24,10 @@ auth = Authentication()
 @app.route('/<path:p>')
 def main(p):
     return render_template("index.html")
+
+
+"""Library api start"""
+
 
 # TODO make authentication by path
 @app.route('/api/v1/library/authors/search/<path:s>')
@@ -46,11 +52,14 @@ def find_books(aid):
     noseq = [change_level(book, 0) for book in books if book['SERIE_NAME'] is None or len(book['SERIE_NAME']) == 0]
     noseq = sorted(noseq, key=lambda book: book['TITLE'])
     for serie_name in series:
-        tmp_arr = [change_level({'TITLE': serie_name},0)]
+        tmp_arr = [change_level({'TITLE': serie_name}, 0)]
         data = data + tmp_arr + [change_level(book, 1) for book in books if book['SERIE_NAME'] == serie_name]
 
     books_result['rows'] = data + noseq
     return jsonify(books_result)
+
+
+"""Library api end """
 
 
 @app.route('/api/v1/public/test')
@@ -64,6 +73,20 @@ def test():
     return jsonify(jdata)
 
 
+"""admin api start"""
+
+
+@app.route('/api/v1/admin/users/new/<email>/<display>/<password>/<role>/', defaults={'modules': None})
+@app.route('/api/v1/admin/users/new/<email>/<display>/<password>/<role>/<modules>')
+def new_user(email, display, password, role, modules):
+    with Users() as users:
+        result = users.create_new(email, display, password, role, modules)
+    return jsonify(result)
+
+
+"""pcloud authenticate account"""
+
+
 @app.route('/connect')
 def connect():
     if not auth.check_token():
@@ -72,6 +95,9 @@ def connect():
                                                                          cfg.PCLOUD["client_id"],
                                                                          cfg.PCLOUD["redirect_uri"])
     return redirect(url)
+
+
+"""pcloud get token"""
 
 
 @app.route('/getcode/', methods=['GET'])

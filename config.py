@@ -51,5 +51,5 @@ PCLOUD = {
 
 GLOBAL = {
     "secret_key": "lib.rus.ec.forever",
-    "user_role": ["user", "admin"]
+    "user_role": ("user", "admin")
 }

@@ -21,7 +21,7 @@ class Users(object):
         pw_hash = generate_password_hash(password)
         sql = u"INSERT INTO {0} (EMAIL, DISPLAY, PASSWORD, ROLE) VALUES('{1}','{2}','{3}','{4}')".format(cfg.DB["users"], email, display, pw_hash, role)
         uid = self.connection.execute_transact(sql)
-        if role == cfg.GLOBAL["user_role"][0] and modules is not None:
+        if role == cfg.GLOBAL["user_role"][0] and modules is not None: # 0 user, 1 admin
             for mid in modules:
                 sql = u"INSERT INTO {0} (UID,MID) VALUES({1},{2})".format(cfg.DB["module2user"], uid, mid)
                 self.connection.execute_transact(sql)
@@ -37,7 +37,7 @@ class Users(object):
         del row["password"]
         result = { "user":  row }
         if check_password_hash(pw_hash, password):
-            if row["ROLE"] == cfg.GLOBAL["user_role"][0]:
+            if row["ROLE"] == cfg.GLOBAL["user_role"][0]: # 0 user, 1 admin
                 sql = "SELECT * FROM {0} WHERE UID = {1}".format(cfg.DB["modulesByUser"], row["UID"])
                 modules = self.connection.execute_fetch(sql, False)
             result["modules"] = modules
