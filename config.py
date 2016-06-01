@@ -16,6 +16,10 @@ DB = {
     "genre2book": "lib_genre2book",
     "genre2group": "lib_genre2group",
     "serie2book": "lib_serie2book",
+    "module2user": "portal_module2user",
+    "modules": "portal_modules",
+    "users": "portal_users",
+    "modulesByUser": "view_modulesByUser",
     "authorsByBook": "view_authorsByBook",
     "booksByAuthor": "view_booksByAuthor",
     "booksByGenre": "view_booksByGenre",
@@ -46,5 +50,6 @@ PCLOUD = {
 }
 
 GLOBAL = {
-    "secret_key": "lib.rus.ec.forever"
+    "secret_key": "lib.rus.ec.forever",
+    "user_role": ["user", "admin"]
 }
