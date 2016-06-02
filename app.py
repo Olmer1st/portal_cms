@@ -84,6 +84,18 @@ def new_user(email, display, password, role, modules):
     return jsonify(result)
 
 
+@app.route('/api/v1/public/authenticate', methods=['POST'])
+def authenticate():
+    if request.data is not None and "email" in request.data and "password" in request.data:
+        login_params = json.loads(request.data)
+
+        with Users() as users:
+            result = users.login(login_params["email"], login_params["password"])
+        return jsonify(result)
+
+    return jsonify(error="access denied")
+
+
 """pcloud authenticate account"""
 
 

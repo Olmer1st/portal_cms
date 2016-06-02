@@ -16,7 +16,11 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
         .state('library', {
             url: '/library',
             templateUrl: 'public/templates/library.html',
-            controller: 'libraryController'
+            controller: 'libraryController',
+            data: {
+                loginRequired: true,
+                admin: false
+            }
         })
         .state('library.authors', {
             url: '/authors',
@@ -63,15 +67,23 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('login', {
-            url: '/login',
-            templateUrl: 'public/templates/login.html',
-            controller: 'loginController'
+        .state('profile', {
+            url: '/profile',
+            templateUrl: 'public/templates/profile.html',
+            controller: 'profileController',
+            data: {
+                loginRequired: true,
+                admin: false
+            }
         })
         .state('admin', {
             url: '/admin',
             templateUrl: 'public/templates/admin.html',
-            controller: 'adminController'
+            controller: 'adminController',
+            data: {
+                loginRequired: true,
+                admin: true
+            }
         });
 
     $urlRouterProvider.otherwise('/home');
@@ -90,5 +102,25 @@ main_app.config(function ($provide) {
             }
         };
         return $delegate;
+    });
+});
+
+main_app.run(function ($http, $rootScope, $state, $cookieStore) {
+    $rootScope.GLOBALS = {};
+    $rootScope.GLOBALS.currentUser = $cookieStore.get('portalUserSession') || null;
+    if ($rootScope.GLOBALS.currentUser) {
+        $http.defaults.headers.common['x-access-token']  =  $rootScope.GLOBALS.currentUser.token;
+    }
+    $rootScope.$on('$stateChangeStart', function (e, to) {
+        if (!to.data) return;
+        if (to.data.loginRequired &&  $rootScope.GLOBALS.currentUser == null) {
+            e.preventDefault();
+            $state.go("home",null, {notify: false});
+            return;
+        }
+        if (to.data.loginRequired && to.data.admin && $rootScope.GLOBALS.currentUser.role != "admin") {
+            e.preventDefault();
+            $state.go("home",null, {notify: false});
+        }
     });
 });

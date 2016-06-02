@@ -9,6 +9,10 @@ main_app.service('apiService', function ($http, $q) {
         return getMethod("library/books/byauthor/" + aid);
     };
 
+    this.LoginToTheSystem = function (email, password) {
+        return postMethod("public/authenticate",{email:email, password:password});
+    };
+
     function getMethod(query) {
         var dfd = $q.defer();
         //console.log('get', ROOT + query);

@@ -12,34 +12,38 @@
         <div class="collapse navbar-collapse" uib-collapse="navbarCollapsed">
             <ul class="nav navbar-nav">
                 <li ng-class="getClass('/home')"><a ui-sref="home">Home</a></li>
-                <li ng-class="getClass('/library')"><a ui-sref="library">Library</a></li>
+                <li ng-if="isPermissionsForModule('library')" ng-class="getClass('/library')"><a ui-sref="library">Library</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <div class="btn-group" uib-dropdown style="padding-top: 7px;">
+                    <div ng-show="currentUser" class="btn-group" uib-dropdown style="padding-top: 7px;">
                         <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>
-                            Hello, current user <span class="caret"></span>
+                            Hello, {{currentUser.display}} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a href="#">Profile</a></li>
+                            <li role="menuitem"><a ui-sref="profile">Profile</a></li>
                             <li class="divider"></li>
-                            <li role="menuitem"><a href="#">Log Out</a></li>
+                            <li role="menuitem"><a ng-click="logout()">Log Out</a></li>
                         </ul>
                     </div>
-                    <!--<div class="form-inline"  style="padding-top: 8px;">-->
-                    <!--<div class="form-group">-->
-                    <!--<label>email</label>-->
-                    <!--<input type="email" class="form-control input-sm"/>-->
-                    <!--</div>-->
-                    <!--<div class="form-group">-->
-                    <!--<label>password</label>-->
-                    <!--<input type="password" class="form-control input-sm"/>-->
-                    <!--</div>-->
-                    <!--<button class="btn btn-default btn-sm">Login</button>-->
-                    <!--</div>-->
 
+                    <div ng-hide="currentUser" class="form-inline relative" style="padding-top: 8px;">
+                        <form name="form" ng-submit="login()" role="form">
+                            <div class="form-group">
+                                <label>email</label>
+                                <input type="email" ng-model="$parent.email" class="form-control input-sm"/>
+                            </div>
+                            <div class="form-group">
+                                <label>password</label>
+                                <input type="password" ng-model="$parent.password" class="form-control input-sm"/>
+                            </div>
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-default btn-sm">Login</button>
+                            </div>
+                        </form>
+                    </div>
                 </li>
-                <li ng-class="getClass('/admin')"><a ui-sref="admin">Admin</a></li>
+                <li ng-if="isPermissionsForModule('admin')" ng-class="getClass('/admin')"><a ui-sref="admin">Admin</a></li>
             </ul>
         </div>
     </div>

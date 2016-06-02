@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import config as cfg
+import jwt
 from middleware.dbconnection import mysql_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -28,19 +29,22 @@ class Users(object):
         return uid
 
     def login(self, email, password):
+        if len(email)==0 or len(password) == 0:
+            return {"error": "Wrong credentials, please check email/password"}
         sql = "SELECT * FROM {0} WHERE EMAIL = '{1}'".format(cfg.DB["users"], email)
         row = self.connection.execute_fetch(sql)
         if row is None:
             return {"error": "Wrong credentials, please check email/password"}
-        pw_hash = row["PASSWORD"]
+        pw_hash = row["password"]
         modules = None
         del row["password"]
-        result = { "user":  row }
+        result = row
         if check_password_hash(pw_hash, password):
-            if row["ROLE"] == cfg.GLOBAL["user_role"][0]: # 0 user, 1 admin
-                sql = "SELECT * FROM {0} WHERE UID = {1}".format(cfg.DB["modulesByUser"], row["UID"])
+            if row["role"] == cfg.GLOBAL["user_role"][0]: # 0 user, 1 admin
+                sql = "SELECT * FROM {0} WHERE UID = {1}".format(cfg.DB["modulesByUser"], row["uid"])
                 modules = self.connection.execute_fetch(sql, False)
             result["modules"] = modules
+            result["token"] = jwt.encode(result, cfg.GLOBAL["secret_key"], algorithm='HS256')
         else:
              return {"error": "Wrong credentials, please check email/password"}
 
