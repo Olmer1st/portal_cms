@@ -2,7 +2,7 @@
 # coding=utf-8
 
 import config as cfg
-import jwt
+from middleware.authentication import Authentication
 from middleware.dbconnection import mysql_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -44,13 +44,19 @@ class Users(object):
                 sql = "SELECT * FROM {0} WHERE UID = {1}".format(cfg.DB["modulesByUser"], row["uid"])
                 modules = self.connection.execute_fetch(sql, False)
             result["modules"] = modules
-            result["token"] = jwt.encode(result, cfg.GLOBAL["secret_key"], algorithm='HS256')
+            result["token"] = Authentication.create_token(result)
         else:
              return {"error": "Wrong credentials, please check email/password"}
 
         return result
 
+    def get_modules(self):
+        sql = "SELECT * FROM {0}".format(cfg.DB["modules"])
+        return self.connection.execute_fetch(sql, False)
 
+    def get_users(self):
+        sql = "SELECT * FROM {0}".format(cfg.DB["allUsers"])
+        return self.connection.execute_fetch(sql, False)
 
     def close(self):
         self.connection.close()

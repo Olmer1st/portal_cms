@@ -1,5 +1,6 @@
 "use strict";
-var main_app = angular.module('main_app', ['ngCookies', 'ngAnimate', 'ngSanitize', 'ngTouch', 'ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.treeView']);
+var main_app = angular.module('main_app', ['ngCookies', 'ngAnimate', 'ngSanitize', 'ngTouch',
+    'ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.treeView', 'ui-notification', 'ngTable']);
 
 
 main_app.config(function ($locationProvider) {
@@ -105,22 +106,36 @@ main_app.config(function ($provide) {
     });
 });
 
-main_app.run(function ($http, $rootScope, $state, $cookieStore) {
+main_app.config(function (NotificationProvider) {
+    NotificationProvider.setOptions({
+        delay: 10000,
+        startTop: 20,
+        startRight: 10,
+        verticalSpacing: 20,
+        horizontalSpacing: 20,
+        positionX: 'center',
+        positionY: 'top'
+    });
+});
+
+main_app.run(function ($http, $rootScope, $state, $cookieStore, Notification) {
     $rootScope.GLOBALS = {};
     $rootScope.GLOBALS.currentUser = $cookieStore.get('portalUserSession') || null;
     if ($rootScope.GLOBALS.currentUser) {
-        $http.defaults.headers.common['x-access-token']  =  $rootScope.GLOBALS.currentUser.token;
+        $http.defaults.headers.common['x-access-token'] = $rootScope.GLOBALS.currentUser.token;
     }
     $rootScope.$on('$stateChangeStart', function (e, to) {
         if (!to.data) return;
-        if (to.data.loginRequired &&  $rootScope.GLOBALS.currentUser == null) {
+        if (to.data.loginRequired && $rootScope.GLOBALS.currentUser == null) {
             e.preventDefault();
-            $state.go("home",null, {notify: false});
+            Notification.error("access denied")
+            $state.go("home", null, {notify: false});
             return;
         }
         if (to.data.loginRequired && to.data.admin && $rootScope.GLOBALS.currentUser.role != "admin") {
             e.preventDefault();
-            $state.go("home",null, {notify: false});
+            Notification.error("access denied")
+            $state.go("home", null, {notify: false});
         }
     });
 });

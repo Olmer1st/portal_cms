@@ -1,5 +1,5 @@
 "use strict";
-main_app.controller("mainController", function ($scope, $rootScope, $location, $state, principal) {
+main_app.controller("mainController", function ($scope, $rootScope, $location, $state, principal,Notification) {
     $scope.currentUser =  $rootScope.GLOBALS.currentUser;
     
     $scope.form = {};
@@ -26,6 +26,8 @@ main_app.controller("mainController", function ($scope, $rootScope, $location, $
                 principal.SetCredentials(response);
                 $scope.currentUser =  $rootScope.GLOBALS.currentUser;
                 $state.go('home');
+            }else if(response && response.error){
+                Notification.error(response.error);
             }
         });
     };

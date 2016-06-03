@@ -18,12 +18,12 @@
                 <li>
                     <div ng-show="currentUser" class="btn-group" uib-dropdown style="padding-top: 7px;">
                         <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>
-                            Hello, {{currentUser.display}} <span class="caret"></span>
+                            <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Hello, {{currentUser.display}} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a ui-sref="profile">Profile</a></li>
+                            <li role="menuitem"><a ui-sref="profile"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Profile</a></li>
                             <li class="divider"></li>
-                            <li role="menuitem"><a ng-click="logout()">Log Out</a></li>
+                            <li role="menuitem"><a href="#" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Log Out</a></li>
                         </ul>
                     </div>
 
@@ -38,7 +38,7 @@
                                 <input type="password" ng-model="$parent.password" class="form-control input-sm"/>
                             </div>
                             <div class="btn-group">
-                                <button type="submit" class="btn btn-default btn-sm">Login</button>
+                                <button type="submit" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-log-in"></span> Login</button>
                             </div>
                         </form>
                     </div>

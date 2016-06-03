@@ -13,6 +13,11 @@ main_app.service('apiService', function ($http, $q) {
         return postMethod("public/authenticate",{email:email, password:password});
     };
 
+
+    this.getAllUsers = function () {
+        return getMethod("admin/users");
+    };
+
     function getMethod(query) {
         var dfd = $q.defer();
         //console.log('get', ROOT + query);
