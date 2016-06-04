@@ -6,6 +6,7 @@ from middleware.authentication import Authentication
 from middleware.dbconnection import mysql_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class Users(object):
     def __init__(self):
         self.connection = mysql_connection()
@@ -20,16 +21,18 @@ class Users(object):
             return {"error": "Email already exist in the system"}
 
         pw_hash = generate_password_hash(password)
-        sql = u"INSERT INTO {0} (EMAIL, DISPLAY, PASSWORD, ROLE) VALUES('{1}','{2}','{3}','{4}')".format(cfg.DB["users"], email, display, pw_hash, role)
+        sql = u"INSERT INTO {0} (EMAIL, DISPLAY, PASSWORD, ROLE) VALUES('{1}','{2}','{3}','{4}')".format(
+            cfg.DB["users"], email, display, pw_hash, role)
         uid = self.connection.execute_transact(sql)
-        if role == cfg.GLOBAL["user_role"][0] and modules is not None: # 0 user, 1 admin
+        if role == cfg.GLOBAL["user_role"][0] and modules is not None:  # 0 user, 1 admin
             for mid in modules:
                 sql = u"INSERT INTO {0} (UID,MID) VALUES({1},{2})".format(cfg.DB["module2user"], uid, mid)
                 self.connection.execute_transact(sql)
         return uid
 
+    # TODO check of amount of wrong logins
     def login(self, email, password):
-        if len(email)==0 or len(password) == 0:
+        if len(email) == 0 or len(password) == 0:
             return {"error": "Wrong credentials, please check email/password"}
         sql = "SELECT * FROM {0} WHERE EMAIL = '{1}'".format(cfg.DB["users"], email)
         row = self.connection.execute_fetch(sql)
@@ -40,15 +43,40 @@ class Users(object):
         del row["password"]
         result = row
         if check_password_hash(pw_hash, password):
-            if row["role"] == cfg.GLOBAL["user_role"][0]: # 0 user, 1 admin
+            if row["role"] == cfg.GLOBAL["user_role"][0]:  # 0 user, 1 admin
                 sql = "SELECT * FROM {0} WHERE UID = {1}".format(cfg.DB["modulesByUser"], row["uid"])
                 modules = self.connection.execute_fetch(sql, False)
             result["modules"] = modules
             result["token"] = Authentication.create_token(result)
         else:
-             return {"error": "Wrong credentials, please check email/password"}
+            return {"error": "Wrong credentials, please check email/password"}
 
         return result
+
+    def get_user(self, uid):
+        sql = "SELECT * FROM {0} WHERE UID = {1}".format(cfg.DB["users"], uid)
+        result = self.connection.execute_fetch(sql)
+        sql = "SELECT * FROM {0} WHERE UID = {1}".format(cfg.DB["modulesByUser"], uid)
+        modules = self.connection.execute_fetch(sql, False)
+        result["modules"] = modules
+        result['password'] = ""
+        return result
+
+    def update_user(self, uid, user):
+        pw_hash = generate_password_hash(user['password'])
+        sql = "UPDATE {0} SET DISPLAY='{1}',ROLE='{2}' WHERE UID = {3}".format(cfg.DB["users"], user['display'],
+                                                                               user['role'], uid)
+        self.connection.execute_transact(sql, None, True)
+        sql = "DELETE FROM {0} WHERE UID = {1}".format(cfg.DB["module2user"], uid)
+        self.connection.execute_transact(sql)
+        modules = map(lambda x: x['mid'], user['modules'])
+        for mid in modules:
+            sql = "INSERT INTO {0} (UID,MID) VALUES({1},{2})".format(cfg.DB["module2user"], uid, mid)
+            self.connection.execute_transact(sql)
+
+    def delete_user(self, uid):
+        sql = "DELETE FROM {0} WHERE UID = {1}".format(cfg.DB["users"], uid)
+        self.connection.execute_transact(sql)
 
     def get_modules(self):
         sql = "SELECT * FROM {0}".format(cfg.DB["modules"])

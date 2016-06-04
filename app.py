@@ -12,8 +12,7 @@ from models.authors import Authors
 from models.books import Books
 from utils import change_level
 from models.users import Users
-
-# from models.series import Series
+from models.series import Series
 
 app = Flask(__name__, template_folder='public', static_folder='public')
 app.config['JSON_AS_ASCII'] = False
@@ -37,6 +36,17 @@ def find_author(search_param):
         result = authors_manager.find_by_fullname(search_param)
     return jsonify(result)
 
+@app.route('/api/v1/library/series/<int:page>/<int:max_rows>', methods=['GET'])
+def get_series(page,max_rows):
+    if not Authentication.check_token('library', request):
+        return jsonify(error= "access denied")
+
+    end = max_rows if page == 1 else  max_rows * page
+    start = page if page == 1 else  end - max_rows
+
+    with Series() as series:
+        result = series.get_all_series(start, end)
+    return jsonify(result)
 
 @app.route('/api/v1/library/books/byauthor/<int:aid>')
 def find_books(aid):
@@ -79,8 +89,8 @@ def test():
 """admin api start"""
 
 
-@app.route('/api/v1/admin/users/',defaults={'uid': None}, methods=['POST','GET'])
-@app.route('/api/v1/admin/users/<int:uid>',methods=['GET', 'PUT','DELETE'])
+@app.route('/api/v1/admin/users/',defaults={'uid': None}, methods=['POST','GET','PUT','DELETE'])
+@app.route('/api/v1/admin/users/<int:uid>',methods=['POST','GET', 'PUT','DELETE'])
 def proccess_user(uid):
     if not Authentication.check_token('admin', request):
         return jsonify(error= "access denied")
@@ -89,13 +99,20 @@ def proccess_user(uid):
         with Users() as users:
             result = {"users": users.get_users()}
     elif request.method == 'POST' and uid is None:
-        pass
+        user = json.loads(request.data)
+        modules = map(lambda x: x["mid"], user["modules"])
+        with Users() as users:
+            result = {'uid': users.create_new(user["email"], user["display"],user["password"],user["role"], modules)}
     elif request.method == 'GET' and uid is not None:
-        pass
+        with Users() as users:
+            result = users.get_user(uid)
     elif request.method == 'PUT' and uid is not None:
-        pass
+        user = json.loads(request.data)
+        with Users() as users:
+            result = {"uid": users.update_user(uid, user)}
     elif request.method == 'DELETE' and uid is not None:
-        pass
+        with Users() as users:
+            result = {"uid": users.delete_user(uid)}
     else:
         result={"error": "wrong parameters"}
     return jsonify(result)

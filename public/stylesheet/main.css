@@ -35,76 +35,84 @@ body {
     cursor: pointer;
 }
 
-.absolute{
+.absolute {
     position: absolute;
 }
 
-.relative{
+.relative {
     position: relative;
 }
 
-.search-box{
+.search-box {
     position: relative;
     display: inline-block;
-    width:100%;
+    width: 100%;
 }
+
 /*Animation*/
 .slide-left.ng-enter {
-  transform: translateX(-60px);
-  -ms-transform: translateX(-60px);
-  -webkit-transform: translateX(-60px);
-  transition-duration: 250ms;
-  -webkit-transition-duration: 250ms;
-  opacity: 0;
+    transform: translateX(-60px);
+    -ms-transform: translateX(-60px);
+    -webkit-transform: translateX(-60px);
+    transition-duration: 250ms;
+    -webkit-transition-duration: 250ms;
+    opacity: 0;
 }
+
 .slide-left.ng-enter-active {
-  transform: translateX(0);
-  -ms-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  opacity: 1;
+    transform: translateX(0);
+    -ms-transform: translateX(0);
+    -webkit-transform: translateX(0);
+    opacity: 1;
 }
+
 .slide-left.ng-leave {
-  transform: translateX(0);
-  -ms-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  transition-duration: 250ms;
-  -webkit-transition-duration: 250ms;
-  opacity: 1;
+    transform: translateX(0);
+    -ms-transform: translateX(0);
+    -webkit-transform: translateX(0);
+    transition-duration: 250ms;
+    -webkit-transition-duration: 250ms;
+    opacity: 1;
 }
+
 .slide-left.ng-leave-active {
-  transform: translateX(-60px);
-  -ms-transform: translateX(-60px);
-  -webkit-transform: translateX(-60px);
-  opacity: 0;
+    transform: translateX(-60px);
+    -ms-transform: translateX(-60px);
+    -webkit-transform: translateX(-60px);
+    opacity: 0;
 }
+
 .slide-left.ng-hide-add {
-  transform: translateX(0);
-  -ms-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  transition-duration: 250ms;
-  -webkit-transition-duration: 250ms;
-  opacity: 1;
+    transform: translateX(0);
+    -ms-transform: translateX(0);
+    -webkit-transform: translateX(0);
+    transition-duration: 250ms;
+    -webkit-transition-duration: 250ms;
+    opacity: 1;
 }
+
 .slide-left.ng-hide-add.ng-hide-add-active {
-  transform: translateX(-60px);
-  -ms-transform: translateX(-60px);
-  -webkit-transform: translateX(-60px);
-  opacity: 0;
+    transform: translateX(-60px);
+    -ms-transform: translateX(-60px);
+    -webkit-transform: translateX(-60px);
+    opacity: 0;
 }
+
 .slide-left.ng-hide-remove {
-  transform: translateX(-60px);
-  -ms-transform: translateX(-60px);
-  -webkit-transform: translateX(-60px);
-  transition-duration: 250ms;
-  -webkit-transition-duration: 250ms;
-  display: block !important;
-  opacity: 0;
+    transform: translateX(-60px);
+    -ms-transform: translateX(-60px);
+    -webkit-transform: translateX(-60px);
+    transition-duration: 250ms;
+    -webkit-transition-duration: 250ms;
+    display: block !important;
+    opacity: 0;
 }
+
 .slide-left.ng-hide-remove.ng-hide-remove-active {
-  transform: translateX(0);
-  -ms-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  opacity: 1;
+    transform: translateX(0);
+    -ms-transform: translateX(0);
+    -webkit-transform: translateX(0);
+    opacity: 1;
 }
 
 /* Floating points loader */
@@ -113,6 +121,7 @@ body {
     top: 33%;
     left: 50%;
 }
+
 .loading-bar {
     display: inline-block;
     width: 5px;
@@ -120,22 +129,27 @@ body {
     border-radius: 4px;
     animation: loading 1s ease-in-out infinite;
 }
+
 .loading-bar:nth-child(1) {
     background-color: #3498db;
     animation-delay: 0;
 }
+
 .loading-bar:nth-child(2) {
     background-color: #c0392b;
     animation-delay: 0.09s;
 }
+
 .loading-bar:nth-child(3) {
     background-color: #f1c40f;
     animation-delay: .18s;
 }
+
 .loading-bar:nth-child(4) {
     background-color: #27ae60;
     animation-delay: .27s;
 }
+
 @keyframes loading {
     0% {
         transform: scale(1);
@@ -148,15 +162,22 @@ body {
     }
 }
 
-.loader-wrap{
+.loader-wrap {
     display: block;
     position: relative;
-    width:100%;
+    width: 100%;
     height: 100%;
     z-index: 9999999;
 }
 
 .grid {
-  width: 100%;
-  height: 600px !important;
+    width: 100%;
+    height: 600px !important;
+}
+
+.leftbarDataWrapper {
+    height: 552px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 15px;
 }

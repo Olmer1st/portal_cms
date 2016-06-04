@@ -21,7 +21,7 @@
                             <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Hello, {{currentUser.display}} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a ui-sref="profile"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Profile</a></li>
+                            <li ng-if="isPermissionsForModule('profile')" role="menuitem"><a ui-sref="profile"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Profile</a></li>
                             <li class="divider"></li>
                             <li role="menuitem"><a href="#" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Log Out</a></li>
                         </ul>

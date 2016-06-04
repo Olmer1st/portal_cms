@@ -18,6 +18,32 @@ main_app.service('apiService', function ($http, $q) {
         return getMethod("admin/users");
     };
 
+    this.getAllModules = function () {
+        return getMethod("admin/modules");
+    };
+
+    this.getConstant = function (name) {
+        return getMethod("admin/constants/" + name);
+    };
+    this.getUser = function (uid) {
+        return getMethod("admin/users/" + uid);
+    };
+    this.addNewUser = function (user) {
+         return postMethod("admin/users/", user);
+    };
+
+    this.updateUser = function (uid, user) {
+         return putMethod("admin/users/" + uid, user);
+    };
+
+    this.deleteUser = function (uid) {
+         return deleteMethod("admin/users/" + uid);
+    };
+
+    this.getAllSeries = function(page, max_rows){
+        return getMethod("library/series/" + page + "/" + max_rows);
+    };
+
     function getMethod(query) {
         var dfd = $q.defer();
         //console.log('get', ROOT + query);

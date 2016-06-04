@@ -25,6 +25,7 @@ DB = {
     "booksByGenre": "view_booksByGenre",
     "booksBySerie": "view_booksBySerie",
     "seriesByBook": "view_seriesByBook",
+    "AllSeries":    "view_AllSeries",
     "allUsers": "view_AllUsers",
     "charset": "utf8"
 

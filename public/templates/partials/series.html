@@ -3,6 +3,31 @@
         <h3 class="panel-title">Series filter</h3>
     </div>
     <div class="panel-body">
-        Series list
+        <div class="search-box" ng-init="searchHover=false" ng-mouseleave="searchHover = false"
+             ng-mouseover="searchHover = true">
+            <input type="text" ng-model="searchParam" class="form-control input-lg relative"
+                   ng-enter="executeSearch()"/>
+            <span ng-if="searchHover" class="glyphicon glyphicon-remove absolute pointer"
+                  style="font-size: larger;top:18px;right:45px;" ng-click="clearSearch()"></span>
+            <span class="glyphicon glyphicon-search absolute pointer" style="font-size: larger;top:18px;right:20px;"
+                  ng-click="executeSearch()"></span>
+        </div>
+        <floating-loader ng-if="loadingData"></floating-loader>
+        <div class="leftbarDataWrapper">
+            <uib-pagination ng-change="pageChanged()" total-items="totalItems" previous-text="&lsaquo;"
+                        next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                        ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true"
+                        items-per-page="itemsPerPage"></uib-pagination>
+            <ul>
+                <li ng-repeat="serie in series track by serie.sid"><a class="pointer"
+                                                                      ng-click="findBooksOfSerie(serie.sid)">{{serie.serie_name}}
+                    <span class="badge">{{serie.books_count}}</span></a></li>
+            </ul>
+            <uib-pagination ng-change="pageChanged()" total-items="totalItems" previous-text="&lsaquo;"
+                        next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                        ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true"
+                        items-per-page="itemsPerPage"></uib-pagination>
+        </div>
+
     </div>
 </div>

@@ -7,7 +7,7 @@ import config as cfg
 
 class Authentication:
     @staticmethod
-    def create_token(self, user_info):
+    def create_token(user_info):
         return jwt.encode(user_info, cfg.GLOBAL["secret_key"], algorithm='HS256')
 
     @staticmethod

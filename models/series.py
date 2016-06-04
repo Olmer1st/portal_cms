@@ -21,6 +21,13 @@ class Series(object):
                                                                                            str_list_of_books)
         return self.connection.execute_fetch(sql)
 
+    def get_all_series(self, start=1, end=50):
+        sql = "SELECT COUNT(*) as 'totalSeries' FROM {0}".format(cfg.DB["series_table"])
+        row = self.connection.execute_fetch(sql)
+        sql = "SELECT * FROM {0} ORDER BY SERIE_NAME LIMIT {1},{2}".format(cfg.DB["AllSeries"], start, end)
+        rows = self.connection.execute_fetch(sql, False)
+        return {'totalSeries': row['totalSeries'], 'series':rows}
+
     def close(self):
         self.connection.close()
 

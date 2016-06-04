@@ -39,7 +39,7 @@ class mysql_connection:
             self._db.commit()
             id = self.cursor.lastrowid if not update else -1
         except Exception as error:
-            self._db.rollback()
+                self._db.rollback()
             # raise error
         return id
 

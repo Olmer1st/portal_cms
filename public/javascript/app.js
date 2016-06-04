@@ -50,7 +50,8 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/series',
             views: {
                 'leftside': {
-                    templateUrl: 'public/templates/partials/series.html',
+                    templateUrl: 'public/templates/partials/series.html?' + new Date(),
+                    controller: 'series'
                 },
                 'books': {
                     templateUrl: 'public/templates/partials/books.html',
@@ -118,7 +119,7 @@ main_app.config(function (NotificationProvider) {
     });
 });
 
-main_app.run(function ($http, $rootScope, $state, $cookieStore, Notification) {
+main_app.run(function ($http, $rootScope, $state, $cookieStore, Notification, principal) {
     $rootScope.GLOBALS = {};
     $rootScope.GLOBALS.currentUser = $cookieStore.get('portalUserSession') || null;
     if ($rootScope.GLOBALS.currentUser) {
@@ -126,7 +127,7 @@ main_app.run(function ($http, $rootScope, $state, $cookieStore, Notification) {
     }
     $rootScope.$on('$stateChangeStart', function (e, to) {
         if (!to.data) return;
-        if (to.data.loginRequired && $rootScope.GLOBALS.currentUser == null) {
+        if (to.data.loginRequired && !principal.isPermissionsForModule(to.name)) {
             e.preventDefault();
             Notification.error("access denied")
             $state.go("home", null, {notify: false});

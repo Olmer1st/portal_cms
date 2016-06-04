@@ -36,4 +36,15 @@ main_app.service('principal', function($http, $cookieStore, $rootScope, apiServi
         $http.defaults.headers.common['x-access-token'] = '';
     };
 
+    this.isPermissionsForModule = function(moduleName){
+        if(!$rootScope.GLOBALS.currentUser) return false;
+        if($rootScope.GLOBALS.currentUser.role == "admin") return true;
+        if(!$rootScope.GLOBALS.currentUser.modules || $rootScope.GLOBALS.currentUser.modules.length==0) return false;
+        var module = $rootScope.GLOBALS.currentUser.modules.find(function(item){
+            return moduleName.indexOf(item.NAME,0)>-1;
+        });
+
+        return module != null;
+    };
+
 });
