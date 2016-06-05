@@ -8,6 +8,9 @@ main_app.service('apiService', function ($http, $q) {
     this.searchForBooksByAuthor = function (aid) {
         return getMethod("library/books/byauthor/" + aid);
     };
+     this.searchForBooksByGenre = function (gid) {
+        return getMethod("library/books/bygenre/" + gid);
+    };
     this.searchForBooksBySerie = function (sid) {
         return getMethod("library/books/byserie/" + sid);
     };
@@ -19,7 +22,7 @@ main_app.service('apiService', function ($http, $q) {
         return postMethod("public/authenticate",{email:email, password:password});
     };
 
-    this.getAllGenries = function () {
+    this.getAllGenres = function () {
       return getMethod("library/genres");
     };
     this.getAllUsers = function () {

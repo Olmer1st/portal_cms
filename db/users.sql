@@ -74,9 +74,8 @@ VIEW `view_AllSeries` AS
         `lib_series`
 
 CREATE DEFINER=`root`@`localhost` FUNCTION `fn_getBooksCountForGenre`(iGid int) RETURNS int(11)
-BEGIN
-RETURN (SELECT COUNT(*) FROM simple_library.lib_genre2book WHERE gid  = iGid);
-END;        
+RETURN (SELECT COUNT(*) FROM simple_library.lib_genre2book WHERE gid  = iGid)
+       
         
 CREATE 
     ALGORITHM = UNDEFINED 
@@ -140,3 +139,34 @@ VIEW `view_genreByGenreGroup` AS
                 `lib_genre2group`)))
             AND (`gg`.`gid` = `gs`.`gid`))
     ORDER BY `gs`.`gdesc`
+    
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `view_booksByGenre` AS
+    SELECT 
+        `ge`.`gid` AS `GID`,
+        `au`.`aid` AS `AID`,
+        `books`.`BID` AS `BID`,
+        `books`.`TITLE` AS `TITLE`,
+        FN_GETGENRENAMES(`books`.`BID`) AS `GENRE`,
+        `books`.`SERIES` AS `SERIE_NAME`,
+        `books`.`SERNO` AS `SERIE_NUMBER`,
+        `books`.`FILE` AS `FILE`,
+        `books`.`EXT` AS `EXT`,
+        `books`.`DEL` AS `DEL`,
+        `books`.`LANG` AS `LANG`,
+        `books`.`SIZE` AS `SIZE`,
+        `books`.`DATE` AS `DATE`,
+        `books`.`LIBRATE` AS `LIBRATE`,
+        `books`.`KEYWORDS` AS `KEYWORDS`,
+        `books`.`PATH` AS `PATH`
+    FROM
+        ((`lib_genre2book` `ge`
+        JOIN `lib_author2book` `au`)
+        JOIN `lib_books` `books`)
+    WHERE
+        ((`au`.`bid` = `books`.`BID`)
+            AND (`ge`.`bid` = `books`.`BID`))
+    ORDER BY `books`.`SERNO`

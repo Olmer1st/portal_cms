@@ -14,9 +14,9 @@ main_app.controller("genres", function ($scope, $rootScope, $state, apiService) 
 
     };
 
-  function getAllGenries() {
+  function getAllGenres() {
         LoadingData(true);
-        apiService.getAllGenries().then(function (response) {
+        apiService.getAllGenres().then(function (response) {
             if (response && !response.error) {
                 $scope.genres = response.children;
             }
@@ -25,7 +25,7 @@ main_app.controller("genres", function ($scope, $rootScope, $state, apiService) 
     }
 
     $scope.init = function () {
-        getAllGenries();
+        getAllGenres();
     };
     $scope.init();
 

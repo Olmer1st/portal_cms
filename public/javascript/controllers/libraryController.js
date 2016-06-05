@@ -92,7 +92,25 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
             LoadingData(false);
         });
     };
+    $scope.findBooksByGenre = function (gid) {
+        $scope.books = [];
+        if (!gid) return;
+        LoadingData(true);
+        var promise = apiService.searchForBooksByGenre(gid);
+        promise.then(function (result) {
+            if (result && !result.error) {
+                $rootScope.safeApply(function () {
+                    //$scope.books = result.rows;
+                    $scope.gridOptions.data = result.rows;
 
+                });
+            }
+            LoadingData(false);
+
+        }, function (reason) {
+            LoadingData(false);
+        });
+    };
     function LoadingData(status) {
         $rootScope.safeApply(function () {
             $scope.loadingData = status

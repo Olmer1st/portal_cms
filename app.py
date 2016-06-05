@@ -99,19 +99,12 @@ def find_books_bygenre(gid):
         series.sort()
         for serie_name in series:
             serie_tmp_arr = [change_level({'TITLE': serie_name, 'type': 'serie'}, 1)]
-            data = data + tmp_arr + [change_level(book, 1) for book in books if book['SERIE_NAME'] == serie_name]
-        # noseq = [change_level(book, 1) for book in books if  book['AID']==author['AID'] and (book['SERIE_NAME'] is None or len(book['SERIE_NAME']) == 0)]
-        # noseq = sorted(noseq, key=lambda book: book['TITLE'])
+            author_tmp_arr = author_tmp_arr + serie_tmp_arr + [change_level(book, 2) for book in books if book['SERIE_NAME'] == serie_name]
+        noseq = [change_level(book, 1) for book in books if  book['AID']==author['AID'] and (book['SERIE_NAME'] is None or len(book['SERIE_NAME']) == 0)]
+        noseq = sorted(noseq, key=lambda book: book['TITLE'])
+        data = data + author_tmp_arr + noseq
 
-        tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
-        data = data + tmp_arr + [change_level(book, 1) for book in books if book['AID'] == author['AID']]
-
-
-
-
-
-
-    books_result['rows'] = data + noseq
+    books_result['rows'] = data
     return jsonify(books_result)
 
 
