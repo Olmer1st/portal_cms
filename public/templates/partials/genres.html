@@ -1,8 +1,31 @@
+<script type="text/ng-template" id="genresnodes.html">
+    <span ng-if="genre.children">{{genre.gdesc}}</span>
+    <a ng-if="!genre.children" class="pointer" ng-click="findBooksByGenre(genre.gid)">{{genre.gdesc}}
+                    <span class="badge">{{genre.books_count}}</span></a>
+    <ul ng-if="genre.children">
+        <li ng-repeat="genre in genre.children  | filter:{gdesc:searchParam} track by genre.gid" ng-include="'genresnodes.html'">
+        </li>
+    </ul>
+</script>
+
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">Filter by genre</h3>
     </div>
     <div class="panel-body">
-        Genres list
+        <div class="search-box" ng-init="searchHover=false" ng-mouseleave="searchHover = false"
+             ng-mouseover="searchHover = true">
+            <input type="text" ng-model="searchParam" class="form-control input-lg relative"/>
+            <span ng-if="searchHover" class="glyphicon glyphicon-remove absolute pointer"
+                  style="font-size: larger;top:18px;right:45px;" ng-click="clearSearch()"></span>
+            <span class="glyphicon glyphicon-search absolute pointer" style="font-size: larger;top:18px;right:20px;"></span>
+        </div>
+        <floating-loader ng-if="loadingData"></floating-loader>
+        <div class="leftbarDataWrapper">
+            <br/>
+            <ul>
+                <li ng-repeat="genre in genres track by genre.gid" ng-include="'genresnodes.html'"></li>
+            </ul>
+        </div>
     </div>
 </div>

@@ -14,7 +14,7 @@
         </div>
         <floating-loader ng-if="loadingData"></floating-loader>
         <div class="leftbarDataWrapper">
-            <uib-pagination ng-change="pageChanged()" total-items="totalItems" previous-text="&lsaquo;"
+            <uib-pagination ng-show="allSeries" ng-change="pageChanged()" total-items="totalItems" previous-text="&lsaquo;"
                         next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
                         ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true"
                         items-per-page="itemsPerPage"></uib-pagination>
@@ -23,7 +23,7 @@
                                                                       ng-click="findBooksOfSerie(serie.sid)">{{serie.serie_name}}
                     <span class="badge">{{serie.books_count}}</span></a></li>
             </ul>
-            <uib-pagination ng-change="pageChanged()" total-items="totalItems" previous-text="&lsaquo;"
+            <uib-pagination ng-show="allSeries" ng-change="pageChanged()" total-items="totalItems" previous-text="&lsaquo;"
                         next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
                         ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true"
                         items-per-page="itemsPerPage"></uib-pagination>

@@ -11,6 +11,11 @@ class Series(object):
     def __init__(self):
         self.connection = mysql_connection()
 
+    def find_serie_by_name(self,search_param):
+        sql = u"SELECT * FROM {0} WHERE SERIE_NAME LIKE '%{1}%' ORDER BY SERIE_NAME ".format(cfg.DB["allSeries"], search_param)
+        rows = self.connection.execute_fetch(sql, False)
+        return {'series': rows}
+
     def find_serie_by_book(self, bid):
         sql = u"SELECT SID,BID,SERIE_NAME,SERIE_NUMBER FROM {0} WHERE BID={1}".format(cfg.DB["seriesByBook"], bid)
         return self.connection.execute_fetch(sql)
@@ -24,7 +29,7 @@ class Series(object):
     def get_all_series(self, start=1, end=50):
         sql = "SELECT COUNT(*) as 'totalSeries' FROM {0}".format(cfg.DB["series_table"])
         row = self.connection.execute_fetch(sql)
-        sql = "SELECT * FROM {0} ORDER BY SERIE_NAME LIMIT {1},{2}".format(cfg.DB["AllSeries"], start, end)
+        sql = "SELECT * FROM {0} ORDER BY SERIE_NAME LIMIT {1},{2}".format(cfg.DB["allSeries"], start, end)
         rows = self.connection.execute_fetch(sql, False)
         return {'totalSeries': row['totalSeries'], 'series':rows}
 

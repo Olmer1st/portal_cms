@@ -89,4 +89,11 @@ main_app.controller("adminController", function ($scope, $filter, $rootScope, $l
 
     $scope.init();
 
+    $scope.cancel = function () {
+        $scope.userForm = {
+            role: "",
+            modules: []
+        };
+    }
+
 });

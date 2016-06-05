@@ -151,8 +151,32 @@ class Books(object):
             info.load_from_row(row)
 
         except:
-            print "Error: unable to fecth data"
+            print "Error: unable to fetch data"
         return info
+
+    def find_by_sid(self, sid):
+        data = {
+            'error': None,
+            'rows': []
+        }
+        sql = u"SELECT * FROM {0} WHERE SID = {1}".format(cfg.DB["booksBySerie"],sid)
+        try:
+            data['rows'] = self.connection.execute_fetch(sql,False)
+        except:
+            data['error'] = "Error: unable to fetch data"
+        return data
+
+    def find_by_gid(self, gid):
+        data = {
+            'error': None,
+            'rows': []
+        }
+        sql = u"SELECT * FROM {0} WHERE GID = {1}".format(cfg.DB["booksByGenre"], gid)
+        try:
+            data['rows'] = self.connection.execute_fetch(sql, False)
+        except:
+            data['error'] = "Error: unable to fetch data"
+        return data
 
     def find_by_file(self, libid, filename):
         info = None
@@ -180,8 +204,8 @@ class Books(object):
         sql = u"UPDATE {} SET AUTHOR = %s, TITLE=%s, GENRE=%s, DEL = %s, LIBRATE = %s, KEYWORDS = %s, UPDATED = CURRENT_TIMESTAMP, PATH = %s WHERE BID = %s".format(
             cfg.DB["main_table"])
         self.connection.execute_transact(sql, (
-        info._author, info._title, info._genre, info._del, info._librate, info._keywords,
-        info._path, bid), True)
+            info._author, info._title, info._genre, info._del, info._librate, info._keywords,
+            info._path, bid), True)
 
     def close(self):
         self.connection.close()

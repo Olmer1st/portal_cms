@@ -8,12 +8,20 @@ main_app.service('apiService', function ($http, $q) {
     this.searchForBooksByAuthor = function (aid) {
         return getMethod("library/books/byauthor/" + aid);
     };
+    this.searchForBooksBySerie = function (sid) {
+        return getMethod("library/books/byserie/" + sid);
+    };
 
+    this.searchForSeries= function (searchParam) {
+        return getMethod("library/series/search/" + searchParam);
+    };
     this.LoginToTheSystem = function (email, password) {
         return postMethod("public/authenticate",{email:email, password:password});
     };
 
-
+    this.getAllGenries = function () {
+      return getMethod("library/genres");
+    };
     this.getAllUsers = function () {
         return getMethod("admin/users");
     };

@@ -22,22 +22,11 @@ CREATE TABLE `portal_users` (
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_modulesByUser` AS select `mo`.`uid` AS `UID`,`mo`.`mid` AS `MID`,`mods`.`name` AS `NAME`,`mods`.`title` AS `TITLE` from (`portal_module2user` `mo` join `portal_modules` `mods`) where (`mods`.`mid` = `mo`.`mid`);
+
 
 CREATE DEFINER=`root`@`localhost` FUNCTION `fn_getModuleName`(iUid int) RETURNS varchar(300) CHARSET utf8
-BEGIN
-RETURN (SELECT 
-      GROUP_CONCAT(DISTINCT name SEPARATOR ', ')
-FROM
-    simple_library.portal_modules
-WHERE
-    mid  in (SELECT mid
-FROM
-    simple_library.portal_module2user
-WHERE
-    uid = iUid
-));
-END
+RETURN (SELECT  GROUP_CONCAT(DISTINCT name SEPARATOR ', ') FROM simple_library.portal_modules WHERE mid  in (SELECT mid FROM simple_library.portal_module2user WHERE uid = iUid));
+
 
 CREATE 
     ALGORITHM = UNDEFINED 
@@ -83,3 +72,71 @@ VIEW `view_AllSeries` AS
         FN_GETBOOKSCOUNTFORSERIE(`lib_series`.`sid`) AS `books_count`
     FROM
         `lib_series`
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_getBooksCountForGenre`(iGid int) RETURNS int(11)
+BEGIN
+RETURN (SELECT COUNT(*) FROM simple_library.lib_genre2book WHERE gid  = iGid);
+END;        
+        
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `view_AllGenreGroups` AS
+    SELECT 
+        `lib_genres`.`gid` AS `gid`,
+        `lib_genres`.`code` AS `code`,
+        `lib_genres`.`gdesc` AS `gdesc`,
+        `lib_genres`.`edesc` AS `edesc`
+    FROM
+        `lib_genres`
+    WHERE
+        `lib_genres`.`gid` IN (SELECT DISTINCT
+                `lib_genre2group`.`gidm`
+            FROM
+                `lib_genre2group`)
+    ORDER BY `lib_genres`.`gdesc`
+    
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `view_AllGenres` AS
+    SELECT 
+        `lib_genres`.`gid` AS `gid`,
+        `lib_genres`.`code` AS `code`,
+        `lib_genres`.`gdesc` AS `gdesc`,
+        `lib_genres`.`edesc` AS `edesc`,
+        FN_GETBOOKSCOUNTFORGENRE(`lib_genres`.`gid`) AS `books_count`
+    FROM
+        `lib_genres`
+    WHERE
+        (NOT (`lib_genres`.`gid` IN (SELECT DISTINCT
+                `lib_genre2group`.`gidm`
+            FROM
+                `lib_genre2group`)))
+    ORDER BY `lib_genres`.`gdesc`
+    
+    
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `view_genreByGenreGroup` AS
+    SELECT 
+        `gs`.`gid` AS `gid`,
+        `gg`.`gidm` AS `gidm`,
+        `gs`.`code` AS `code`,
+        `gs`.`gdesc` AS `gdesc`,
+        `gs`.`edesc` AS `edesc`,
+        FN_GETBOOKSCOUNTFORGENRE(`gs`.`gid`) AS `books_count`
+    FROM
+        (`lib_genres` `gs`
+        JOIN `lib_genre2group` `gg`)
+    WHERE
+        ((NOT (`gs`.`gid` IN (SELECT DISTINCT
+                `lib_genre2group`.`gidm`
+            FROM
+                `lib_genre2group`)))
+            AND (`gg`.`gid` = `gs`.`gid`))
+    ORDER BY `gs`.`gdesc`

@@ -11,12 +11,12 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: 'public/templates/home.html',
+            templateUrl: 'public/templates/home.html?' + new Date(),
             controller: 'homeController'
         })
         .state('library', {
             url: '/library',
-            templateUrl: 'public/templates/library.html',
+            templateUrl: 'public/templates/library.html?' + new Date(),
             controller: 'libraryController',
             data: {
                 loginRequired: true,
@@ -27,11 +27,11 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/authors',
             views: {
                 'leftside': {
-                    templateUrl: 'public/templates/partials/authors.html',
+                    templateUrl: 'public/templates/partials/authors.html?' + new Date(),
                     controller: 'authors'
                 },
                 'books': {
-                    templateUrl: 'public/templates/partials/books.html',
+                    templateUrl: 'public/templates/partials/books.html?' + new Date()
                 }
             }
         })
@@ -39,10 +39,11 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/genres',
             views: {
                 'leftside': {
-                    templateUrl: 'public/templates/partials/genres.html',
+                    templateUrl: 'public/templates/partials/genres.html?' + new Date(),
+                    controller: 'genres'
                 },
                 'books': {
-                    templateUrl: 'public/templates/partials/books.html',
+                    templateUrl: 'public/templates/partials/books.html?' + new Date()
                 }
             }
         })
@@ -54,7 +55,7 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
                     controller: 'series'
                 },
                 'books': {
-                    templateUrl: 'public/templates/partials/books.html',
+                    templateUrl: 'public/templates/partials/books.html?' + new Date()
                 }
             }
         })
@@ -62,16 +63,16 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             url: '/search',
             views: {
                 'leftside': {
-                    templateUrl: 'public/templates/partials/search.html',
+                    templateUrl: 'public/templates/partials/search.html?' + new Date(),
                 },
                 'books': {
-                    templateUrl: 'public/templates/partials/books.html',
+                    templateUrl: 'public/templates/partials/books.html?' + new Date()
                 }
             }
         })
         .state('profile', {
             url: '/profile',
-            templateUrl: 'public/templates/profile.html',
+            templateUrl: 'public/templates/profile.html?' + new Date(),
             controller: 'profileController',
             data: {
                 loginRequired: true,
@@ -80,7 +81,7 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
         })
         .state('admin', {
             url: '/admin',
-            templateUrl: 'public/templates/admin.html',
+            templateUrl: 'public/templates/admin.html?' + new Date(),
             controller: 'adminController',
             data: {
                 loginRequired: true,

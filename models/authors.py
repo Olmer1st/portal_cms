@@ -36,6 +36,19 @@ class Authors(object):
             data['error'] = error.message
         return data
 
+    def find_by_ids(self, aids):
+        str_list_of_aids = ",".join(aids)
+        data = {
+            'error': None,
+            'rows': []
+        }
+        sql = u"SELECT AID, FULLNAME FROM {0} WHERE AID IN ({1})".format(cfg.DB["authors_table"], str_list_of_aids)
+        try:
+            data['rows'] = self.connection.execute_fetch(sql, False)
+        except Exception as error:
+            data['error'] = error.message
+        return data
+
     def close(self):
         self.connection.close()
 

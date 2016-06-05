@@ -25,8 +25,11 @@ DB = {
     "booksByGenre": "view_booksByGenre",
     "booksBySerie": "view_booksBySerie",
     "seriesByBook": "view_seriesByBook",
-    "AllSeries":    "view_AllSeries",
+    "allSeries":    "view_AllSeries",
     "allUsers": "view_AllUsers",
+    "allGenreGroups": "view_AllGenreGroups",
+    "allGenres": "view_AllGenres",
+    "genreByGenreGroup" : "view_genreByGenreGroup",
     "charset": "utf8"
 
 }

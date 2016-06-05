@@ -1,5 +1,5 @@
 "use strict";
-main_app.controller("libraryController", function ($scope, $rootScope, $location, $state, uiGridTreeViewConstants, apiService) {
+main_app.controller("libraryController", function ($scope, $rootScope, $location, $state, $timeout, uiGridTreeViewConstants, apiService) {
     $scope.leftBar = {
         isOpen: true
     };
@@ -62,6 +62,30 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
                     $scope.gridOptions.data = result.rows;
                 });
             }
+            LoadingData(false);
+
+        }, function (reason) {
+            LoadingData(false);
+        });
+    };
+    
+    $scope.findBooksInSerie = function (sid) {
+        $scope.books = [];
+        if (!sid) return;
+        LoadingData(true);
+        var promise = apiService.searchForBooksBySerie(sid);
+        promise.then(function (result) {
+            if (result && !result.error) {
+                $rootScope.safeApply(function () {
+                    //$scope.books = result.rows;
+                    $scope.gridOptions.data = result.rows;
+
+                });
+            }
+            $timeout(function () {
+                $scope.gridApi.treeBase.expandAllRows();
+            },0, true)
+
             LoadingData(false);
 
         }, function (reason) {
