@@ -1,22 +1,36 @@
 <table class="width100">
     <tr>
-        <td class="width25 aligned-top padding10" ng-show="leftBar.isOpen">
-            <div class="slide-left relative" ng-show="leftBar.isOpen" ui-view="leftside"></div>
+        <td class="width25 aligned-top">
+            <div class="leftbar" ui-view="leftside"></div>
         </td>
-        <td class="width75 aligned-top padding10">
-            <div class="container">
-                <div class="btn-toolbar">
-                    <a class="btn btn-default btn-lg" ng-click="hideLeftBar()">
-                    <span class="glyphicon"
-                          ng-class="leftBar.isOpen?'glyphicon-eye-close': 'glyphicon-eye-open'"></span>
-                    </a>
-                    <a ng-click="executeState($index)" class="btn btn-lg"
-                       ng-class="button.active?'btn-primary':'btn-default'" ng-repeat="button in buttons">{{button.title}}</a>
+        <td class="width75 aligned-top absolute">
+                <div class="form-inline">
+                    <div class="btn-toolbar">
+                        <!--<a class="btn btn-default btn-lg" ng-click="hideLeftBar()">
+                        <span class="glyphicon"
+                              ng-class="leftBar.isOpen?'glyphicon-eye-close': 'glyphicon-eye-open'"></span>
+                        </a>-->
+                        <a ng-click="executeState($index)" class="btn btn-lg"
+                           ng-class="button.active?'btn-primary':'btn-default'"
+                           ng-repeat="button in buttons">{{ button.title }}</a>
+
+                        <div class="form-group" style="margin-left: 20px;margin-top: 7px;">
+                            <select ng-model="language" class="form-control">
+                                <option value="all" ng-selected="true">All</option>
+                            </select>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="isHideDeleted" ng-checked="false"/>Hide
+                                    deleted?</label>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <br/>
                 <div ui-view="books"></div>
-            </div>
+
 
         </td>
     </tr>

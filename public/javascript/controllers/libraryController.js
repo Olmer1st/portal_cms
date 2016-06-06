@@ -120,13 +120,14 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
     //AID, BID, TITLE, SERIE_NAME, SERIE_NUMBER, GENRE, FILE, EXT, DEL, LANG, SIZE, DATE, LIBRATE, KEYWORDS, PATH
     $scope.gridOptions = {
         enableSorting: false,
+        enableColumnResizing: true,
         enableFiltering: false,
         showTreeExpandNoChildren: false,
         columnDefs: [
-            {name: 'name', width: '45%', field:"TITLE", enableColumnMenu:false},
+            {name: 'name', width: '40%', field:"TITLE", enableColumnMenu:false},
             {name: '#', width: '2%', field: "SERIE_NUMBER", enableColumnMenu:false},
-            {name: 'size', width: '5%', field: "SIZE", enableColumnMenu:false},
-            {name: 'lang.', width: '2%', field: "LANG",enableColumnMenu:false},
+            {name: 'size', width: '7%', field: "SIZE", enableColumnMenu:false},
+            {name: 'lang.', width: '5%', field: "LANG",enableColumnMenu:false},
             {name: 'date', width: '10%', field: "DATE", enableColumnMenu:false},
             {name: 'genre', width: '*', field: "GENRE", enableColumnMenu:false}
         ],
