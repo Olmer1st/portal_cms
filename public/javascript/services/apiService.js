@@ -5,6 +5,9 @@ main_app.service('apiService', function ($http, $q) {
         return getMethod("library/authors/search/" + searchParam);
     };
 
+    this.getAllLanguages = function () {
+        return getMethod("library/languages");
+    };
     this.searchForBooksByAuthor = function (aid) {
         return getMethod("library/books/byauthor/" + aid);
     };

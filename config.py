@@ -30,6 +30,7 @@ DB = {
     "allGenreGroups": "view_AllGenreGroups",
     "allGenres": "view_AllGenres",
     "genreByGenreGroup" : "view_genreByGenreGroup",
+    "allLanguages": "view_AllLanguages",
     "charset": "utf8"
 
 }

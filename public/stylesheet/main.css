@@ -183,7 +183,7 @@ body {
 }
 
 .leftbarDataWrapper {
-    height: 100%;
+    height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;
     font-size: 15px;

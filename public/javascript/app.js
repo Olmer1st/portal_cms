@@ -49,7 +49,7 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
         })
         .state('library.series', {
             url: '/series',
-            views: {
+            views: {    
                 'leftside': {
                     templateUrl: 'public/templates/partials/series.html?' + new Date(),
                     controller: 'series'

@@ -21,6 +21,9 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         active: false
     }];
 
+    $scope.languages = [];
+    $scope.language = {LANG:"ru"};
+    $scope.isHideDeleted = true;
     $scope.hideLeftBar= function () {
         $scope.leftBar.isOpen = !$scope.leftBar.isOpen;
         $scope.gridApi.grid.refresh();
@@ -29,6 +32,13 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
     $scope.loadingData = false;
 
     $scope.init = function () {
+
+
+        apiService.getAllLanguages().then(function(response){
+            if(response && !response.error){
+                $scope.languages = response.rows;
+            }
+        });
         var defaultButton = $scope.buttons.find(function (item) {
                 return item.active;
             }) || $scope.buttons[0];

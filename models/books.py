@@ -14,6 +14,18 @@ class Books(object):
     def __init__(self):
         self.connection = mysql_connection()
 
+    def get_all_languages(self):
+        sql = "SELECT * FROM {0} ORDER BY LANG".format(cfg.DB["allLanguages"])
+        rows = None
+        try:
+            rows = self.connection.execute_fetch(sql, False)
+
+        except Exception as error:
+            pass
+            # print "Error: unable to fecth data %s" % error
+
+        return rows
+
     def get_all_books(self):
         sql = u"SELECT BID, AUTHOR, GENRE,SERIES,SERNO,FILE FROM {0}".format(cfg.DB["main_table"])
         rows = None
@@ -101,12 +113,19 @@ class Books(object):
 
         return rows
 
-    def find_by_author(self, aid):
+    def find_by_author(self, aid, lang='ru', hide=True):
         data = {
             'error': None,
             'rows': []
         }
-        sql = u"SELECT * FROM {0} WHERE AID =  {1} AND DEL is NULL".format(cfg.DB["booksByAuthor"], aid)
+        lang_part=""
+        hide_part=""
+        if lang != '':
+            lang_part = " AND LANG = '{}'".format(lang)
+        if hide:
+            hide_part = " AND DEL IS NULL"
+        sql = "SELECT * FROM {0} WHERE AID =  {1}".format(cfg.DB["booksByAuthor"], aid)
+        sql = sql + lang_part + hide_part
 
         try:
             data['rows'] = self.connection.execute_fetch(sql, False)
@@ -154,24 +173,35 @@ class Books(object):
             print "Error: unable to fetch data"
         return info
 
-    def find_by_sid(self, sid):
+    def find_by_sid(self, sid,lang='ru', hide=True):
         data = {
             'error': None,
             'rows': []
         }
-        sql = u"SELECT * FROM {0} WHERE SID = {1}".format(cfg.DB["booksBySerie"],sid)
+        if lang != '':
+            lang_part = " AND LANG = '{}'".format(lang)
+        if hide:
+            hide_part = " AND DEL IS NULL"
+        sql = "SELECT * FROM {0} WHERE SID = {1}".format(cfg.DB["booksBySerie"],sid)
+        sql = sql + lang_part + hide_part
         try:
             data['rows'] = self.connection.execute_fetch(sql,False)
         except:
             data['error'] = "Error: unable to fetch data"
         return data
 
-    def find_by_gid(self, gid):
+    def find_by_gid(self, gid,lang='ru', hide=True):
         data = {
             'error': None,
             'rows': []
         }
-        sql = u"SELECT * FROM {0} WHERE GID = {1}".format(cfg.DB["booksByGenre"], gid)
+        # limit_part = " LIMIT {0},{1}".format(start, end)
+        if lang != '':
+            lang_part = " AND LANG = '{}'".format(lang)
+        if hide:
+            hide_part = " AND DEL IS NULL"
+        sql = "SELECT * FROM {0} WHERE GID = {1}".format(cfg.DB["booksByGenre"], gid)
+        sql = sql + lang_part + hide_part + limit_part
         try:
             data['rows'] = self.connection.execute_fetch(sql, False)
         except:

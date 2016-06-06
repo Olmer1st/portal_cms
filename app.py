@@ -75,6 +75,16 @@ def get_genres():
     return jsonify(result)
 
 
+@app.route('/api/v1/library/languages')
+def get_all_languages():
+    if not Authentication.check_token('library', request):
+        return jsonify(error="access denied")
+    with Books() as books:
+        langs = books.get_all_languages()
+
+    return jsonify(rows=langs)
+
+
 @app.route('/api/v1/library/books/bygenre/<int:gid>')
 def find_books_bygenre(gid):
     if not Authentication.check_token('library', request):

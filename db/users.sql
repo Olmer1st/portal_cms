@@ -170,3 +170,13 @@ VIEW `view_booksByGenre` AS
         ((`au`.`bid` = `books`.`BID`)
             AND (`ge`.`bid` = `books`.`BID`))
     ORDER BY `books`.`SERNO`
+    
+    CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `view_AllLanguages` AS
+    SELECT DISTINCT
+        `lib_books`.`LANG` AS `LANG`
+    FROM
+        `lib_books`
