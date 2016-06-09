@@ -43,6 +43,19 @@ class mysql_connection:
             # raise error
         return id
 
+    def call_proc_fetch(self, proc_name,  args=()):
+        sets = []
+        try:
+            results = self._cursor.callproc(proc_name, args)
+            sets.append(self._cursor.fetchall())
+            while self._cursor.nextset():
+                sets.append(self._cursor.fetchall())
+
+        except Exception as error:
+            pass
+
+        return sets
+
     def close(self):
         try:
             if self._db is not None:

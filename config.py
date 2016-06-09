@@ -31,6 +31,7 @@ DB = {
     "allGenres": "view_AllGenres",
     "genreByGenreGroup" : "view_genreByGenreGroup",
     "allLanguages": "view_AllLanguages",
+    "getBooksByGenre": "sp_getBooksByGenre",
     "charset": "utf8"
 
 }

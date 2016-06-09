@@ -201,11 +201,23 @@ class Books(object):
         if hide:
             hide_part = " AND DEL IS NULL"
         sql = "SELECT * FROM {0} WHERE GID = {1}".format(cfg.DB["booksByGenre"], gid)
-        sql = sql + lang_part + hide_part + limit_part
+        sql = sql + lang_part + hide_part
         try:
             data['rows'] = self.connection.execute_fetch(sql, False)
         except:
             data['error'] = "Error: unable to fetch data"
+        return data
+
+    def find_by_gid_sp(self, gid, lang='ru', hide=True):
+        data = {
+            'error': None,
+            'books': [],
+            'authors':[]
+        }
+
+        result = self.connection.call_proc_fetch(cfg.DB['getBooksByGenre'],(gid,lang, 0 if not hide else 1))
+        data['books'] = result[0]
+        data['authors'] = result[1]
         return data
 
     def find_by_file(self, libid, filename):

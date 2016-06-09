@@ -64,7 +64,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         $scope.books = [];
         if (!aid) return;
         LoadingData(true);
-        var promise = apiService.searchForBooksByAuthor(aid);
+        var promise = apiService.searchForBooksByAuthor(aid,  $scope.language.LANG, $scope.isHideDeleted);
         promise.then(function (result) {
             if (result && !result.error) {
                 $rootScope.safeApply(function () {
@@ -83,7 +83,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         $scope.books = [];
         if (!sid) return;
         LoadingData(true);
-        var promise = apiService.searchForBooksBySerie(sid);
+        var promise = apiService.searchForBooksBySerie(sid,  $scope.language.LANG, $scope.isHideDeleted);
         promise.then(function (result) {
             if (result && !result.error) {
                 $rootScope.safeApply(function () {
@@ -106,7 +106,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         $scope.books = [];
         if (!gid) return;
         LoadingData(true);
-        var promise = apiService.searchForBooksByGenre(gid);
+        var promise = apiService.searchForBooksByGenre(gid,  $scope.language.LANG, $scope.isHideDeleted);
         promise.then(function (result) {
             if (result && !result.error) {
                 $rootScope.safeApply(function () {

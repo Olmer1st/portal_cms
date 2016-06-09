@@ -8,14 +8,14 @@ main_app.service('apiService', function ($http, $q) {
     this.getAllLanguages = function () {
         return getMethod("library/languages");
     };
-    this.searchForBooksByAuthor = function (aid) {
-        return getMethod("library/books/byauthor/" + aid);
+    this.searchForBooksByAuthor = function (aid,lang, hide) {
+        return getMethod("library/books/byauthor/" + aid+ "/" + lang + "/" + hide);
     };
-     this.searchForBooksByGenre = function (gid) {
-        return getMethod("library/books/bygenre/" + gid);
+     this.searchForBooksByGenre = function (gid, lang, hide) {
+        return getMethod("library/books/bygenre/" + gid+ "/" + lang + "/" + hide);
     };
-    this.searchForBooksBySerie = function (sid) {
-        return getMethod("library/books/byserie/" + sid);
+    this.searchForBooksBySerie = function (sid, lang, hide) {
+        return getMethod("library/books/byserie/" + sid + "/" + lang + "/" + hide);
     };
 
     this.searchForSeries= function (searchParam) {

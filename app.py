@@ -85,22 +85,17 @@ def get_all_languages():
     return jsonify(rows=langs)
 
 
-@app.route('/api/v1/library/books/bygenre/<int:gid>')
-def find_books_bygenre(gid):
+@app.route('/api/v1/library/books/bygenre/<int:gid>/<lang>/<hide>')
+def find_books_bygenre(gid, lang, hide):
     if not Authentication.check_token('library', request):
         return jsonify(error="access denied")
     """'AID': None, 'BID': None, 'SERIE_NAME':None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None,
     'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
     data = []
     with Books() as books_manager:
-        books_result = books_manager.find_by_gid(gid)
-    books = books_result['rows']
-    aids = list(set([str(book["AID"]) for book in books]))
-    with Authors() as authors_manager:
-        authors_result = authors_manager.find_by_ids(aids)
-    authors = authors_result['rows']
-    authors = sorted(authors, key=lambda author: author["FULLNAME"])
-
+        books_result = books_manager.find_by_gid_sp(gid, lang, hide)
+    authors = books_result['authors']
+    books = books_result['books']
     for author in authors:
         author_tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
         series = list(
@@ -114,19 +109,18 @@ def find_books_bygenre(gid):
         noseq = sorted(noseq, key=lambda book: book['TITLE'])
         data = data + author_tmp_arr + noseq
 
-    books_result['rows'] = data
-    return jsonify(books_result)
+    return jsonify(rows = data)
 
 
-@app.route('/api/v1/library/books/byauthor/<int:aid>')
-def find_books_byauthor(aid):
+@app.route('/api/v1/library/books/byauthor/<int:aid>/<lang>/<hide>')
+def find_books_byauthor(aid, lang, hide):
     if not Authentication.check_token('library', request):
         return jsonify(error="access denied")
     """'AID': None, 'BID': None, 'SERIE_NAME':None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None,
     'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
     data = []
     with Books() as books_manager:
-        books_result = books_manager.find_by_author(aid)
+        books_result = books_manager.find_by_author(aid, lang, hide)
 
     books = books_result['rows']
     series = list(
@@ -142,15 +136,15 @@ def find_books_byauthor(aid):
     return jsonify(books_result)
 
 
-@app.route('/api/v1/library/books/byserie/<int:sid>')
-def find_books_byserie(sid):
+@app.route('/api/v1/library/books/byserie/<int:sid>/<lang>/<hide>')
+def find_books_byserie(sid, lang, hide):
     if not Authentication.check_token('library', request):
         return jsonify(error="access denied")
     """'AID': None, 'BID': None, 'SERIE_NAME':None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None,
     'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
     data = []
     with Books() as books_manager:
-        books_result = books_manager.find_by_sid(sid)
+        books_result = books_manager.find_by_sid(sid, lang, hide)
     books = books_result['rows']
     aids = list(set([str(book["AID"]) for book in books]))
     with Authors() as authors_manager:
