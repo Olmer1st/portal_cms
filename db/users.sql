@@ -24,7 +24,7 @@ CREATE TABLE `portal_users` (
 
 
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `fn_getModuleName`(iUid int) RETURNS varchar(300) CHARSET utf8
+CREATE FUNCTION `fn_getModuleName`(iUid int) RETURNS varchar(300) CHARSET utf8
 RETURN (SELECT  GROUP_CONCAT(DISTINCT name SEPARATOR ', ') FROM simple_library.portal_modules WHERE mid  in (SELECT mid FROM simple_library.portal_module2user WHERE uid = iUid));
 
 

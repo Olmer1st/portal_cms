@@ -16,6 +16,7 @@ from models.series import Series
 from models.genres import Genres
 
 app = Flask(__name__, template_folder='public', static_folder='public')
+# app.config.from_pyfile('flaskapp.cfg') # production only
 app.config['JSON_AS_ASCII'] = False
 
 
@@ -95,21 +96,22 @@ def find_books_bygenre(gid, lang, hide):
     with Books() as books_manager:
         books_result = books_manager.find_by_gid_sp(gid, lang, hide)
     authors = books_result['authors']
-    books = books_result['books']
+    series = books_result['series']
+    books_by_serie = books_result['books_by_serie']
+    books_no_serie = books_result['books_no_serie']
     for author in authors:
         author_tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
-        series = list(
-            set([book['SERIE_NAME'] for book in books if
-                 book['SERIE_NAME'] is not None and len(book['SERIE_NAME']) > 0 and book['AID']==author['AID']]))
-        series.sort()
-        for serie_name in series:
-            serie_tmp_arr = [change_level({'TITLE': serie_name, 'type': 'serie'}, 1)]
-            author_tmp_arr = author_tmp_arr + serie_tmp_arr + [change_level(book, 2) for book in books if book['SERIE_NAME'] == serie_name]
-        noseq = [change_level(book, 1) for book in books if  book['AID']==author['AID'] and (book['SERIE_NAME'] is None or len(book['SERIE_NAME']) == 0)]
-        noseq = sorted(noseq, key=lambda book: book['TITLE'])
+        tmp_series = filter(lambda x: x['AID'] == author['AID'], series)
+        for serie in tmp_series:
+            serie_tmp_arr = [change_level({'TITLE': serie['SERIE_NAME'], 'type': 'serie'}, 1)]
+            author_tmp_arr = author_tmp_arr + serie_tmp_arr + [change_level(book, 2) for book in books_by_serie if
+                                                               book['SERIE_NAME'] == serie['SERIE_NAME'] and book[
+                                                                   'AID'] == serie['AID']]
+            noseq = [change_level(book, 1) for book in books_no_serie if book['AID'] == author['AID']]
+            # noseq = sorted(noseq, key=lambda book: book['TITLE'])
         data = data + author_tmp_arr + noseq
 
-    return jsonify(rows = data)
+    return jsonify(rows=data)
 
 
 @app.route('/api/v1/library/books/byauthor/<int:aid>/<lang>/<hide>')
@@ -124,7 +126,8 @@ def find_books_byauthor(aid, lang, hide):
 
     books = books_result['rows']
     series = list(
-        set([book['SERIE_NAME'] for book in books if book['SERIE_NAME'] is not None and len(book['SERIE_NAME']) > 0]))
+        set([book['SERIE_NAME'] for book in books if
+             book['SERIE_NAME'] is not None and len(book['SERIE_NAME']) > 0]))
     series.sort()
     noseq = [change_level(book, 0) for book in books if book['SERIE_NAME'] is None or len(book['SERIE_NAME']) == 0]
     noseq = sorted(noseq, key=lambda book: book['TITLE'])
@@ -151,13 +154,14 @@ def find_books_byserie(sid, lang, hide):
         authors_result = authors_manager.find_by_ids(aids)
 
     authors = authors_result['rows']
-    authors = sorted(authors, key =lambda author: author["FULLNAME"])
+    authors = sorted(authors, key=lambda author: author["FULLNAME"])
     for author in authors:
         tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
         data = data + tmp_arr + [change_level(book, 1) for book in books if book['AID'] == author['AID']]
 
     books_result['rows'] = data
     return jsonify(books_result)
+
 
 """Library api end """
 
@@ -189,7 +193,8 @@ def proccess_user(uid):
         user = json.loads(request.data)
         modules = map(lambda x: x["mid"], user["modules"])
         with Users() as users:
-            result = {'uid': users.create_new(user["email"], user["display"], user["password"], user["role"], modules)}
+            result = {
+                'uid': users.create_new(user["email"], user["display"], user["password"], user["role"], modules)}
     elif request.method == 'GET' and uid is not None:
         with Users() as users:
             result = users.get_user(uid)
@@ -222,14 +227,14 @@ def proccess_constants(constant):
     return jsonify(result=cfg.GLOBAL[constant])
 
 
+"""unremark when needd t oadd admin
 @app.route('/api/v1/admin/users/new/<email>/<display>/<password>/<role>/', defaults={'modules': None})
 @app.route('/api/v1/admin/users/new/<email>/<display>/<password>/<role>/<modules>')
 def new_user(email, display, password, role, modules):
-    if not Authentication.check_token('library', request):
-        return jsonify(error="access denied")
     with Users() as users:
         result = users.create_new(email, display, password, role, modules)
     return jsonify(result)
+"""
 
 
 @app.route('/api/v1/public/authenticate', methods=['POST'])

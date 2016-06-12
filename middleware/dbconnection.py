@@ -8,7 +8,8 @@ from MySQLdb import cursors
 
 class mysql_connection:
     def __init__(self):
-        self._db = MySQLdb.connect(cfg.DB["servername"], cfg.DB["username"], cfg.DB["password"], cfg.DB["dbname"],
+        self._db = MySQLdb.connect(host=cfg.DB["host"], port=cfg.DB["port"], user=cfg.DB["username"],
+                                   passwd=cfg.DB["password"], db=cfg.DB["dbname"],
                                    charset=cfg.DB["charset"], cursorclass=cursors.DictCursor)
         self._cursor = self._db.cursor()
 
@@ -39,11 +40,11 @@ class mysql_connection:
             self._db.commit()
             id = self.cursor.lastrowid if not update else -1
         except Exception as error:
-                self._db.rollback()
+            self._db.rollback()
             # raise error
         return id
 
-    def call_proc_fetch(self, proc_name,  args=()):
+    def call_proc_fetch(self, proc_name, args=()):
         sets = []
         try:
             results = self._cursor.callproc(proc_name, args)

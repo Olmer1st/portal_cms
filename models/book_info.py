@@ -48,22 +48,22 @@ class BookInfo(object):
     def load_from_row(self, row):
         if row is None:
             return
-        self._author = row[0]
-        self._genre = row[1]
-        self._title = row[2]
-        self._series = row[3]
-        self._serno = row[4]
-        self._file = row[5]
-        self._size = row[6]
-        self._libid = row[7]
-        self._del = row[8]
-        self._ext = row[9]
-        self._date = row[10]
-        self._lang = row[11]
-        self._librate = row[12]
-        self._keywords = row[13]
-        self._path = row[14]
-        self._bid = row[15]
+        self._author = row['AUTHOR']
+        self._genre = row['GENRE']
+        self._title = row['TITLE']
+        self._series = row['SERIES']
+        self._serno = row['SERNO']
+        self._file = row['FILE']
+        self._size = row['SIZE']
+        self._libid = row['LIBID']
+        self._del = row['DEL']
+        self._ext = row['EXT']
+        self._date = row['DATE']
+        self._lang = row['LANG']
+        self._librate = row['LIBRATE']
+        self._keywords = row['KEYWORDS']
+        self._path = row['PATH']
+        self._bid = row['BID']
 
     def load_from_row_partial(self, row):
         if row is None:

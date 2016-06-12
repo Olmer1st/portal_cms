@@ -210,14 +210,14 @@ class Books(object):
 
     def find_by_gid_sp(self, gid, lang='ru', hide=True):
         data = {
-            'error': None,
-            'books': [],
-            'authors':[]
+            'error': None
         }
 
-        result = self.connection.call_proc_fetch(cfg.DB['getBooksByGenre'],(gid,lang, 0 if not hide else 1))
-        data['books'] = result[0]
-        data['authors'] = result[1]
+        result = self.connection.call_proc_fetch(cfg.DB['getAllDataByGenre'],(gid,lang, 0 if not hide else 1))
+        data['books_no_serie'] = result[3] if len(result)>0 else []
+        data['books_by_serie'] = result[2] if len(result)>0 else []
+        data['authors'] = result[0] if len(result)>1 else []
+        data['series'] = result[1] if len(result) > 1 else []
         return data
 
     def find_by_file(self, libid, filename):

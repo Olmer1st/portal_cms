@@ -4,6 +4,7 @@
 DB = {
     "host": "127.0.0.1",
     "servername": "localhost",
+    "port": 3306,
     "dbname": "simple_library",
     "username": "library_admin",
     "password": "123456",
@@ -20,9 +21,8 @@ DB = {
     "modules": "portal_modules",
     "users": "portal_users",
     "modulesByUser": "view_modulesByUser",
-    "authorsByBook": "view_authorsByBook",
     "booksByAuthor": "view_booksByAuthor",
-    "booksByGenre": "view_booksByGenre",
+    "booksByGenre": "view_booksByGenre", # should be replaced by sp
     "booksBySerie": "view_booksBySerie",
     "seriesByBook": "view_seriesByBook",
     "allSeries":    "view_AllSeries",
@@ -32,14 +32,15 @@ DB = {
     "genreByGenreGroup" : "view_genreByGenreGroup",
     "allLanguages": "view_AllLanguages",
     "getBooksByGenre": "sp_getBooksByGenre",
+    "getAllDataByGenre": "sp_getAllDataByGenre",
     "charset": "utf8"
 
 }
 
 LIBRARY = {
-    "archives_path": "/media/olmer/Documents - HDD4/_Lib.rus.ec - Официальная/lib.rus.ec",
-    "inpx_file": "/media/olmer/Documents - HDD4/_Lib.rus.ec - Официальная/librusec_local_fb2.inpx",
-    "library_files": "/home/olmer/library_files"
+    "archives_path": "/media/olmer/Documents-HDD4/_Lib.rus.ec - Официальная/lib.rus.ec",
+    "inpx_file": "/media/olmer/Documents-HDD4/_Lib.rus.ec - Официальная/librusec_local_fb2.inpx",
+    "library_files": "/media/olmer/Documents-HDD4/lib_files"
 }
 
 PCLOUD = {
