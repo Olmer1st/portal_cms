@@ -1,6 +1,7 @@
 "use strict";
 var main_app = angular.module('main_app', ['ngCookies', 'ngAnimate', 'ngSanitize', 'ngTouch',
-    'ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.treeView','ui.grid.resizeColumns','ui.grid.autoResize', 'ui-notification', 'ngTable']);
+    'ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.treeView','ui.grid.resizeColumns','ui.grid.autoResize',
+    'ui.grid.selection','ui-notification', 'ngTable']);
 
 
 main_app.config(function ($locationProvider) {

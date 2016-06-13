@@ -107,7 +107,7 @@ def find_books_bygenre(gid, lang, hide):
             author_tmp_arr = author_tmp_arr + serie_tmp_arr + [change_level(book, 2) for book in books_by_serie if
                                                                book['SERIE_NAME'] == serie['SERIE_NAME'] and book[
                                                                    'AID'] == serie['AID']]
-            noseq = [change_level(book, 1) for book in books_no_serie if book['AID'] == author['AID']]
+        noseq = [change_level(book, 1) for book in books_no_serie if book['AID'] == author['AID']]
             # noseq = sorted(noseq, key=lambda book: book['TITLE'])
         data = data + author_tmp_arr + noseq
 

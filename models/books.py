@@ -118,9 +118,9 @@ class Books(object):
             'error': None,
             'rows': []
         }
-        lang_part=""
-        hide_part=""
-        if lang != '':
+        lang_part = ""
+        hide_part = ""
+        if lang != 'all':
             lang_part = " AND LANG = '{}'".format(lang)
         if hide:
             hide_part = " AND DEL IS NULL"
@@ -173,30 +173,35 @@ class Books(object):
             print "Error: unable to fetch data"
         return info
 
-    def find_by_sid(self, sid,lang='ru', hide=True):
+    def find_by_sid(self, sid, lang='ru', hide=True):
         data = {
             'error': None,
             'rows': []
         }
-        if lang != '':
+        lang_part = ""
+        hide_part = ""
+        if lang != 'all':
             lang_part = " AND LANG = '{}'".format(lang)
+
         if hide:
             hide_part = " AND DEL IS NULL"
-        sql = "SELECT * FROM {0} WHERE SID = {1}".format(cfg.DB["booksBySerie"],sid)
+        sql = "SELECT * FROM {0} WHERE SID = {1}".format(cfg.DB["booksBySerie"], sid)
         sql = sql + lang_part + hide_part
         try:
-            data['rows'] = self.connection.execute_fetch(sql,False)
+            data['rows'] = self.connection.execute_fetch(sql, False)
         except:
             data['error'] = "Error: unable to fetch data"
         return data
 
-    def find_by_gid(self, gid,lang='ru', hide=True):
+    def find_by_gid(self, gid, lang='ru', hide=True):
         data = {
             'error': None,
             'rows': []
         }
         # limit_part = " LIMIT {0},{1}".format(start, end)
-        if lang != '':
+        lang_part = ""
+        hide_part = ""
+        if lang != 'all':
             lang_part = " AND LANG = '{}'".format(lang)
         if hide:
             hide_part = " AND DEL IS NULL"
@@ -213,10 +218,10 @@ class Books(object):
             'error': None
         }
 
-        result = self.connection.call_proc_fetch(cfg.DB['getAllDataByGenre'],(gid,lang, 0 if not hide else 1))
-        data['books_no_serie'] = result[3] if len(result)>0 else []
-        data['books_by_serie'] = result[2] if len(result)>0 else []
-        data['authors'] = result[0] if len(result)>1 else []
+        result = self.connection.call_proc_fetch(cfg.DB['getAllDataByGenre'], (gid, lang, 0 if not hide else 1))
+        data['books_no_serie'] = result[3] if len(result) > 0 else []
+        data['books_by_serie'] = result[2] if len(result) > 0 else []
+        data['authors'] = result[0] if len(result) > 1 else []
         data['series'] = result[1] if len(result) > 1 else []
         return data
 

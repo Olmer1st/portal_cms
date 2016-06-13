@@ -1,5 +1,5 @@
 "use strict";
-main_app.controller("genres", function ($scope, $rootScope, $state, apiService) {
+main_app.controller("genres", function ($scope, $rootScope, $state, $timeout,  apiService, Notification) {
     var libraryScope = $scope.$parent;
     var mainScope = libraryScope.$parent;
 
@@ -30,7 +30,12 @@ main_app.controller("genres", function ($scope, $rootScope, $state, apiService) 
     $scope.init();
 
     $scope.findBooksByGenre = function (gid) {
-        libraryScope.findBooksByGenre(gid);
+
+        Notification.info("Please note, this operation can be longer than usual, be patient...");
+        $timeout(function(){
+            libraryScope.findBooksByGenre(gid);
+        },10, true);
+
     };
 
     function LoadingData(status) {

@@ -21,10 +21,11 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         active: false
     }];
 
+    $scope.selectedBook = null;
     $scope.languages = [];
-    $scope.language = {LANG:"ru"};
+    $scope.language = {LANG: "ru"};
     $scope.isHideDeleted = true;
-    $scope.hideLeftBar= function () {
+    $scope.hideLeftBar = function () {
         $scope.leftBar.isOpen = !$scope.leftBar.isOpen;
         $scope.gridApi.grid.refresh();
     };
@@ -34,9 +35,10 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
     $scope.init = function () {
 
 
-        apiService.getAllLanguages().then(function(response){
-            if(response && !response.error){
+        apiService.getAllLanguages().then(function (response) {
+            if (response && !response.error) {
                 $scope.languages = response.rows;
+                $scope.languages.unshift({LANG:'all'});
             }
         });
         var defaultButton = $scope.buttons.find(function (item) {
@@ -64,7 +66,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         $scope.books = [];
         if (!aid) return;
         LoadingData(true);
-        var promise = apiService.searchForBooksByAuthor(aid,  $scope.language.LANG, $scope.isHideDeleted);
+        var promise = apiService.searchForBooksByAuthor(aid, $scope.language.LANG, $scope.isHideDeleted);
         promise.then(function (result) {
             if (result && !result.error) {
                 $rootScope.safeApply(function () {
@@ -78,12 +80,12 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
             LoadingData(false);
         });
     };
-    
+
     $scope.findBooksInSerie = function (sid) {
         $scope.books = [];
         if (!sid) return;
         LoadingData(true);
-        var promise = apiService.searchForBooksBySerie(sid,  $scope.language.LANG, $scope.isHideDeleted);
+        var promise = apiService.searchForBooksBySerie(sid, $scope.language.LANG, $scope.isHideDeleted);
         promise.then(function (result) {
             if (result && !result.error) {
                 $rootScope.safeApply(function () {
@@ -94,7 +96,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
             }
             $timeout(function () {
                 $scope.gridApi.treeBase.expandAllRows();
-            },0, true)
+            }, 0, true)
 
             LoadingData(false);
 
@@ -106,7 +108,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         $scope.books = [];
         if (!gid) return;
         LoadingData(true);
-        var promise = apiService.searchForBooksByGenre(gid,  $scope.language.LANG, $scope.isHideDeleted);
+        var promise = apiService.searchForBooksByGenre(gid, $scope.language.LANG, $scope.isHideDeleted);
         promise.then(function (result) {
             if (result && !result.error) {
                 $rootScope.safeApply(function () {
@@ -127,22 +129,46 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         });
     }
 
+
     //AID, BID, TITLE, SERIE_NAME, SERIE_NUMBER, GENRE, FILE, EXT, DEL, LANG, SIZE, DATE, LIBRATE, KEYWORDS, PATH
     $scope.gridOptions = {
         enableSorting: false,
         enableColumnResizing: true,
         enableFiltering: false,
         showTreeExpandNoChildren: false,
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        enableSelectAll: false,
+        multiSelect: false,
+        noUnselect: true,
+        modifierKeysToMultiSelect: false,
+        showGridFooter: true,
         columnDefs: [
-            {name: 'name', width: '40%', field:"TITLE", enableColumnMenu:false},
-            {name: '#', width: '2%', field: "SERIE_NUMBER", enableColumnMenu:false},
-            {name: 'size', width: '7%', field: "SIZE", enableColumnMenu:false},
-            {name: 'lang.', width: '5%', field: "LANG",enableColumnMenu:false},
-            {name: 'date', width: '10%', field: "DATE", enableColumnMenu:false},
-            {name: 'genre', width: '*', field: "GENRE", enableColumnMenu:false}
+            {name: 'name', width: '40%', field: "TITLE", enableColumnMenu: false},
+            {name: '#', width: '2%', field: "SERIE_NUMBER", enableColumnMenu: false},
+            {name: 'size', width: '7%', field: "SIZE", enableColumnMenu: false},
+            {name: 'lang.', width: '5%', field: "LANG", enableColumnMenu: false},
+            {name: 'date', width: '10%', field: "DATE", enableColumnMenu: false},
+            {name: 'genre', width: '*', field: "GENRE", enableColumnMenu: false}
         ],
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;
+            gridApi.selection.on.rowSelectionChanged($scope,function(row){
+                if(row){
+                    $scope.selectedBook = row.entity;
+                } else {
+                    $scope.selectedBook = null;
+                }
+
+            });
+        }
+    };
+
+      $scope.gridOptions.isRowSelectable = function (row) {
+        if (!row.entity.type) {
+            return true;
+        } else {
+            return false;
         }
     };
 });
