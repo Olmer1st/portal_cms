@@ -58,6 +58,10 @@ main_app.service('apiService', function ($http, $q) {
         return getMethod("library/series/" + page + "/" + max_rows);
     };
 
+     this.getDownloadLink = function(bid, folder_name, file_name){
+        return getMethod("library/books/download/" + bid + "/" + folder_name + "/" + file_name);
+    };
+
     function getMethod(query) {
         var dfd = $q.defer();
         //console.log('get', ROOT + query);

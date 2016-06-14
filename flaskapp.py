@@ -163,6 +163,18 @@ def find_books_byserie(sid, lang, hide):
     return jsonify(books_result)
 
 
+@app.route('/api/v1/library/books/download/<int:bid>/<folder_name>/<file_name>')
+def get_download_info(bid, folder_name, file_name):
+    if not Authentication.check_token('library', request):
+        return jsonify(error="access denied")
+
+    jdata = PCloudService.get_download_link(bid, folder_name, file_name)
+    if jdata and jdata["result"] is 0:
+        url = ""
+        if jdata["hosts"]:
+            url = "//" + jdata["hosts"][0] + jdata["path"]
+        return jsonify(url=url)
+    return jsonify(jdata)
 """Library api end """
 
 

@@ -179,7 +179,7 @@ body {
 
 .grid {
     width: 98% !important;
-    height: 75vh !important;
+    height: 60vh !important;
 }
 
 .leftbarDataWrapper {
@@ -195,4 +195,9 @@ body {
 
 .leftbarPanel{
     min-height: 83vh !important;
+}
+
+.bookInfoPanel{
+    width: 98% !important;
+    height: 15vh !important;
 }

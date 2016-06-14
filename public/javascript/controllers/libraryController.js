@@ -21,7 +21,8 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         active: false
     }];
 
-    $scope.selectedBook = null;
+    $scope.selectedBook = { book : null, url: null};
+
     $scope.languages = [];
     $scope.language = {LANG: "ru"};
     $scope.isHideDeleted = true;
@@ -147,17 +148,25 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
             {name: 'name', width: '40%', field: "TITLE", enableColumnMenu: false},
             {name: '#', width: '2%', field: "SERIE_NUMBER", enableColumnMenu: false},
             {name: 'size', width: '7%', field: "SIZE", enableColumnMenu: false},
-            {name: 'lang.', width: '5%', field: "LANG", enableColumnMenu: false},
+            {name: 'lng.', width: '5%', field: "LANG", enableColumnMenu: false},
             {name: 'date', width: '10%', field: "DATE", enableColumnMenu: false},
             {name: 'genre', width: '*', field: "GENRE", enableColumnMenu: false}
         ],
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;
             gridApi.selection.on.rowSelectionChanged($scope,function(row){
+                $scope.selectedBook = {book: null, url: null};
                 if(row){
-                    $scope.selectedBook = row.entity;
-                } else {
-                    $scope.selectedBook = null;
+
+                    var promise = apiService.getDownloadLink(row.entity.BID, row.entity.PATH, row.entity.FILE + "."
+                        + row.entity.EXT + ".zip");
+                    promise.then(function (response) {
+                        $rootScope.safeApply(function () {
+                            $scope.selectedBook.book = row.entity;
+                            $scope.selectedBook.url = response.url;
+                        });
+
+                    });
                 }
 
             });

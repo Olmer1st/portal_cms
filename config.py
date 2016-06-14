@@ -17,6 +17,7 @@ DB = {
     "genre2book": "lib_genre2book",
     "genre2group": "lib_genre2group",
     "serie2book": "lib_serie2book",
+    "cloud": "lib_cloud",
     "module2user": "portal_module2user",
     "modules": "portal_modules",
     "users": "portal_users",
@@ -52,8 +53,10 @@ PCLOUD = {
     "redirect_uri": "http://localhost:5000/getcode",
     "methods": {
         "o2token": {"name": "oauth2_token"},
-        "listfolder": {"name": "listfolder", "params": {"path": "/"}},
-        "getfilelink": {"name": "getfilelink", "params": {"path": "/%s/%s"}}
+        "folder": {"name": "listfolder", "params": {"path": "/"}},
+        "link": {"name": "getfilelink", "params": {"path": "/%s/%s"}},
+        "publink": {"name": "getfilepublink", "params" : {"path": "/%s/%s"}},
+        "download": {"name": "getpublinkdownload", "params": {"code":"%s"}}
     }
 }
 
