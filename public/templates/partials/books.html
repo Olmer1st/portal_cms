@@ -5,7 +5,7 @@
         <h3 class="panel-title"><strong>Information about selected book</strong></h3>
     </div>
     <div class="panel-body">
-        <p ng-if="selectedBook.book">Title:{{selectedBook.book.TITLE}}->Size:{{selectedBook.book.SIZE }}&nbsp;&nbsp;<a href="{{selectedBook.url}}" class="btn btn-primary">Download</a></p>
+        <p ng-if="selectedBook.book">Title:{{selectedBook.book.TITLE}}->Size:{{selectedBook.book.SIZE }}&nbsp;&nbsp;<a ng-click="download()" ng-disabled="selectedBook.downloading" class="btn btn-primary">Download</a></p>
     </div>
 </div>
 

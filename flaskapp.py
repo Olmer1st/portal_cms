@@ -5,7 +5,7 @@
 import json
 import requests
 import config as cfg
-from flask import Flask, redirect, request, jsonify, render_template, render_template_string
+from flask import Flask, redirect, request, jsonify, render_template, render_template_string, make_response
 from middleware.authentication import Authentication
 from pcloud.service import PCloudService
 from models.authors import Authors
@@ -172,8 +172,13 @@ def get_download_info(bid, folder_name, file_name):
     if jdata and jdata["result"] is 0:
         url = ""
         if jdata["hosts"]:
-            url = "//" + jdata["hosts"][0] + jdata["path"]
-        return jsonify(url=url)
+            url = "http://" + jdata["hosts"][0] + jdata["path"]
+            response = requests.get(url)
+            if response.ok:
+                result = make_response(response.content)
+                result.headers['Content-Type'] = 'application/zip'
+                result.headers['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+                return result
     return jsonify(jdata)
 """Library api end """
 

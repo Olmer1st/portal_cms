@@ -1,5 +1,5 @@
 "use strict";
-main_app.controller("libraryController", function ($scope, $rootScope, $location, $state, $timeout, uiGridTreeViewConstants, apiService) {
+main_app.controller("libraryController", function ($scope, $rootScope, $location, $state, $timeout, uiGridTreeViewConstants, apiService, FileSaver, Blob) {
     $scope.leftBar = {
         isOpen: true
     };
@@ -21,7 +21,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         active: false
     }];
 
-    $scope.selectedBook = { book : null, url: null};
+    $scope.selectedBook = {book: null, downloading: false};
 
     $scope.languages = [];
     $scope.language = {LANG: "ru"};
@@ -39,7 +39,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         apiService.getAllLanguages().then(function (response) {
             if (response && !response.error) {
                 $scope.languages = response.rows;
-                $scope.languages.unshift({LANG:'all'});
+                $scope.languages.unshift({LANG: 'all'});
             }
         });
         var defaultButton = $scope.buttons.find(function (item) {
@@ -154,30 +154,40 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         ],
         onRegisterApi: function (gridApi) {
             $scope.gridApi = gridApi;
-            gridApi.selection.on.rowSelectionChanged($scope,function(row){
+            gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 $scope.selectedBook = {book: null, url: null};
-                if(row){
-
-                    var promise = apiService.getDownloadLink(row.entity.BID, row.entity.PATH, row.entity.FILE + "."
-                        + row.entity.EXT + ".zip");
-                    promise.then(function (response) {
-                        $rootScope.safeApply(function () {
-                            $scope.selectedBook.book = row.entity;
-                            $scope.selectedBook.url = response.url;
-                        });
+                if (row) {
+                    $rootScope.safeApply(function () {
+                        $scope.selectedBook.book = row.entity;
 
                     });
+
                 }
 
             });
         }
     };
 
-      $scope.gridOptions.isRowSelectable = function (row) {
+    $scope.gridOptions.isRowSelectable = function (row) {
         if (!row.entity.type) {
             return true;
         } else {
             return false;
         }
+    };
+
+
+    $scope.download = function () {
+        $scope.selectedBook.downloading = true;
+        var filename = $scope.selectedBook.book.FILE + "."
+            + $scope.selectedBook.book.EXT + ".zip";
+        var promise = apiService.getDownloadLink($scope.selectedBook.book.BID, $scope.selectedBook.book.PATH, filename);
+        promise.then(function (response) {
+            var data = new Blob([response], {type: "application/zip"});
+            FileSaver.saveAs(data, filename);
+            $scope.selectedBook.downloading = false;
+        });
+
+
     };
 });
