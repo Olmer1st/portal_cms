@@ -168,7 +168,7 @@ def get_download_info(bid, folder_name, file_name):
     if not Authentication.check_token('library', request):
         return jsonify(error="access denied")
 
-    jdata = PCloudService.get_download_link(bid, folder_name, file_name)
+    jdata = PCloudService.get_direct_link(folder_name, file_name)
     if jdata and jdata["result"] is 0:
         url = ""
         if jdata["hosts"]:

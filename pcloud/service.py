@@ -26,7 +26,7 @@ class PCloudService:
         pass
 
     @staticmethod
-    def get_link(folder_name, file_name):
+    def get_direct_link(folder_name, file_name):
         if not folder_name or not file_name:
             return {"error": "wrong parameters"}
         method = cfg.PCLOUD["methods"]["link"]
@@ -39,7 +39,7 @@ class PCloudService:
         return {"error": "no data"}
 
     @staticmethod
-    def get_download_link(bid, folder_name, file_name):
+    def get_public_link(bid, folder_name, file_name):
         if not bid or not folder_name or not file_name:
             return {"error": "wrong parameters"}
         cloud = None
