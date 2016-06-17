@@ -15,11 +15,11 @@
                            ng-repeat="button in buttons">{{ button.title }}</a>
 
                         <div class="form-group" style="margin-left: 20px;margin-top: 7px;">
-                            <select ng-model="language" class="form-control" ng-options="lang.LANG for lang in languages track by lang.LANG">
+                            <select ng-model="language" class="form-control" ng-options="lang.LANG for lang in languages track by lang.LANG" ng-change="refresh($event)">
                             </select>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="isHideDeleted"/>Hide
+                                    <input type="checkbox" ng-model="isHideDeleted" ng-change="refresh($event)"/>Hide
                                     deleted?</label>
                             </div>
                         </div>

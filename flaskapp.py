@@ -94,7 +94,7 @@ def find_books_bygenre(gid, lang, hide):
     'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
     data = []
     with Books() as books_manager:
-        books_result = books_manager.find_by_gid_sp(gid, lang, hide)
+        books_result = books_manager.find_by_gid_sp(gid, lang,  True if hide=="true" else False)
     authors = books_result['authors']
     series = books_result['series']
     books_by_serie = books_result['books_by_serie']
@@ -122,7 +122,7 @@ def find_books_byauthor(aid, lang, hide):
     'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
     data = []
     with Books() as books_manager:
-        books_result = books_manager.find_by_author(aid, lang, hide)
+        books_result = books_manager.find_by_author(aid, lang, True if hide=="true" else False)
 
     books = books_result['rows']
     series = list(
@@ -147,7 +147,7 @@ def find_books_byserie(sid, lang, hide):
     'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
     data = []
     with Books() as books_manager:
-        books_result = books_manager.find_by_sid(sid, lang, hide)
+        books_result = books_manager.find_by_sid(sid, lang,  True if hide=="true" else False)
     books = books_result['rows']
     aids = list(set([str(book["AID"]) for book in books]))
     with Authors() as authors_manager:
@@ -183,15 +183,15 @@ def get_download_info(bid, folder_name, file_name):
 """Library api end """
 
 
-@app.route('/api/v1/public/test')
-def test():
-    jdata = PCloudService.get_link("fb2-000024-030559", "24.fb2.zip")
-    if jdata and jdata["result"] is 0:
-        url = ""
-        if jdata["hosts"]:
-            url = "//" + jdata["hosts"][0] + jdata["path"]
-        return render_template_string("<a href='{}'>24.fb2.zip</a>".format(url))
-    return jsonify(jdata)
+# @app.route('/api/v1/public/test')
+# def test():
+#     jdata = PCloudService.get_link("fb2-000024-030559", "24.fb2.zip")
+#     if jdata and jdata["result"] is 0:
+#         url = ""
+#         if jdata["hosts"]:
+#             url = "//" + jdata["hosts"][0] + jdata["path"]
+#         return render_template_string("<a href='{}'>24.fb2.zip</a>".format(url))
+#     return jsonify(jdata)
 
 
 """admin api start"""

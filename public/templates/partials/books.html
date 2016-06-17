@@ -5,7 +5,9 @@
         <h3 class="panel-title"><strong>Information about selected book</strong></h3>
     </div>
     <div class="panel-body">
-        <p ng-if="selectedBook.book">Title:{{selectedBook.book.TITLE}}->Size:{{selectedBook.book.SIZE }}&nbsp;&nbsp;<a ng-click="download()" ng-disabled="selectedBook.downloading" class="btn btn-primary">Download</a></p>
+        <table ng-if="selectedBook.book" style="border-spacing: 10px;border-collapse: separate;">
+            <tr><td><h4><strong>Title:&nbsp;</strong>{{selectedBook.book.TITLE}}</h4></td><td><h4><strong>Size:&nbsp;</strong>{{selectedBook.book.SIZE/1024/1024 | number:1 }}&nbsp;mb</h4></td><td><a ng-click="download()" ng-disabled="selectedBook.downloading" class="btn btn-primary">Download</a></td></tr>
+        </table>
     </div>
 </div>
 

@@ -26,6 +26,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
     $scope.languages = [];
     $scope.language = {LANG: "ru"};
     $scope.isHideDeleted = true;
+    $scope.stateParam = null;
     $scope.hideLeftBar = function () {
         $scope.leftBar.isOpen = !$scope.leftBar.isOpen;
         $scope.gridApi.grid.refresh();
@@ -62,8 +63,31 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         });
 
     };
-
+    $scope.refresh = function ($event) {
+        //$event.stopPropagation();
+        if (!$scope.stateParam) return;
+        var button = $scope.buttons.find(function (item) {
+            return item.active;
+        });
+        if (!button) return;
+        switch (button.name) {
+            case "library.authors":
+                $scope.findBooksOfAuthor($scope.stateParam);
+                break;
+            case  "library.genres":
+                $scope.findBooksByGenre($scope.stateParam);
+                break;
+            case "library.series":
+                $scope.findBooksInSerie($scope.stateParam);
+                break;
+            case "library.search":
+                break;
+            default:
+                break;
+        }
+    };
     $scope.findBooksOfAuthor = function (aid) {
+        $scope.stateParam = aid;
         $scope.books = [];
         if (!aid) return;
         LoadingData(true);
@@ -83,6 +107,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
     };
 
     $scope.findBooksInSerie = function (sid) {
+        $scope.stateParam = sid;
         $scope.books = [];
         if (!sid) return;
         LoadingData(true);
@@ -106,6 +131,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         });
     };
     $scope.findBooksByGenre = function (gid) {
+        $scope.stateParam = gid;
         $scope.books = [];
         if (!gid) return;
         LoadingData(true);
@@ -130,6 +156,13 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         });
     }
 
+    function rowTemplate() {
+        return $timeout(function () {
+            return '<div ng-class="{ \'grid-del-css-class\': row.entity.DEL}">' +
+                '  <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>' +
+                '</div>';
+        }, 0);
+    }
 
     //AID, BID, TITLE, SERIE_NAME, SERIE_NUMBER, GENRE, FILE, EXT, DEL, LANG, SIZE, DATE, LIBRATE, KEYWORDS, PATH
     $scope.gridOptions = {
@@ -144,6 +177,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         noUnselect: true,
         modifierKeysToMultiSelect: false,
         showGridFooter: true,
+        rowTemplate: rowTemplate(),
         columnDefs: [
             {name: 'name', width: '40%', field: "TITLE", enableColumnMenu: false},
             {name: '#', width: '2%', field: "SERIE_NUMBER", enableColumnMenu: false},
