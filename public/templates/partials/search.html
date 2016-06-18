@@ -1,8 +1,60 @@
-<div class="panel panel-primary leftbarPanel">
+<style>
+  .full button span {
+    background-color: limegreen;
+    border-radius: 32px;
+    color: black;
+  }
+  .partially button span {
+    background-color: orange;
+    border-radius: 32px;
+    color: black;
+  }
+</style>
+<div class="panel panel-primary leftbarPanel" xmlns="http://www.w3.org/1999/html">
     <div class="panel-heading">
         <h3 class="panel-title">Advanced search</h3>
     </div>
     <div class="panel-body">
-        Search options
+        <p class="form-group">
+            <label>Author</label>
+            <input class="form-control" type="text" ng-model="author"/>
+        </p>
+        <p class="form-group">
+            <label>Title</label>
+            <input class="form-control" type="text" ng-model="title"/>
+        </p>
+        <p class="form-group">
+            <label>Genre</label>
+            <select class="form-control" ng-model="genre">
+                <optgroup label="all">
+                    <option>genre</option>
+                </optgroup>
+            </select>
+        </p>
+        <p class="form-group">
+            <label>From Date</label>
+        <p class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup ng-model="dtFrom"
+                   is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+        </p>
+        <p class="form-group">
+            <label>To Date</label>
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="dtTo" is-open="popup2.opened"
+                       datepicker-options="dateOptions" ng-required="true" close-text="Close"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open2()"><i
+                        class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </p>
+        <p class="btn-toolbar">
+            <button class="btn btn-primary">Search</button>
+        </p>
     </div>
 </div>

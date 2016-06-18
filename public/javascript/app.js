@@ -65,6 +65,7 @@ main_app.config(function ($stateProvider, $urlRouterProvider) {
             views: {
                 'leftside': {
                     templateUrl: 'public/templates/partials/search.html?' + new Date(),
+                    controller: 'search'
                 },
                 'books': {
                     templateUrl: 'public/templates/partials/books.html?' + new Date()
