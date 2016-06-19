@@ -1,45 +1,12 @@
 "use strict";
 main_app.controller("search", function ($scope, $rootScope, $state, apiService) {
-
-    function getDayClass(data) {
-        var date = data.date,
-            mode = data.mode;
-        if (mode === 'day') {
-            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-            for (var i = 0; i < $scope.events.length; i++) {
-                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-                if (dayToCheck === currentDay) {
-                    return $scope.events[i].status;
-                }
-            }
-        }
-
-        return '';
-    }
-
-    var tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    var afterTomorrow = new Date();
-    afterTomorrow.setDate(tomorrow.getDate() + 1);
-    $scope.events = [
-        {
-            date: tomorrow,
-            status: 'full'
-        },
-        {
-            date: afterTomorrow,
-            status: 'partially'
-        }
-    ];
-    $scope.inlineOptions = {
-        customClass: getDayClass,
-        minDate: new Date(),
-        showWeeks: true
-    };
-    $scope.dtFrom = (new Date()).setMonth((new Date()).getMonth() - 1);
-    $scope.dtTo = new Date();
+    var libraryScope = $scope.$parent;
+    var mainScope = libraryScope.$parent;
+    $scope.searchParam = {};
+    $scope.genres = [];
+    $scope.loadingData = false;
+    $scope.searchParam.dtFrom = (new Date()).setMonth((new Date()).getMonth() - 1);
+    $scope.searchParam.dtTo = new Date();
 
     $scope.dateOptions = {
         formatYear: 'yy',
@@ -58,8 +25,6 @@ main_app.controller("search", function ($scope, $rootScope, $state, apiService) 
     };
 
 
-    $scope.format = 'yyyy-MMMM-dd';
-
     $scope.popup1 = {
         opened: false
     };
@@ -67,5 +32,55 @@ main_app.controller("search", function ($scope, $rootScope, $state, apiService) 
     $scope.popup2 = {
         opened: false
     };
+
+    $scope.clearSearch = function () {
+        $rootScope.safeApply(function () {
+            $scope.searchParam = {};
+        });
+
+    };
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    function getAllGenres() {
+        LoadingData(true);
+        apiService.getAllGenres().then(function (response) {
+            if (response && !response.error) {
+                $scope.genres = response.children;
+            }
+            LoadingData(false);
+        });
+    }
+
+    $scope.searchByForm = function () {
+        var options = {};
+        options.author = $scope.searchParam.anchor?$scope.searchParam.anchor:'all';
+        options.title = $scope.searchParam.title?$scope.searchParam.title:'all';
+        options.gid = $scope.searchParam.genre?$scope.searchParam.genre:'-1';
+        options.fromDate =formatDate($scope.searchParam.dtFrom);
+        options.toDate = formatDate($scope.searchParam.dtTo);
+        libraryScope.findBooksbySearchForm(options);
+    };
+
+    $scope.init = function () {
+        getAllGenres();
+    };
+    $scope.init();
+
+    function LoadingData(status) {
+        $rootScope.safeApply(function () {
+            $scope.loadingData = status
+        });
+    }
+
 
 });

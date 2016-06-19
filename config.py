@@ -23,17 +23,18 @@ DB = {
     "users": "portal_users",
     "modulesByUser": "view_modulesByUser",
     "booksByAuthor": "view_booksByAuthor",
-    "booksByGenre": "view_booksByGenre", # should be replaced by sp
+    "booksByGenre": "view_booksByGenre",  # should be replaced by sp
     "booksBySerie": "view_booksBySerie",
     "seriesByBook": "view_seriesByBook",
-    "allSeries":    "view_AllSeries",
+    "allSeries": "view_AllSeries",
     "allUsers": "view_AllUsers",
     "allGenreGroups": "view_AllGenreGroups",
     "allGenres": "view_AllGenres",
-    "genreByGenreGroup" : "view_genreByGenreGroup",
+    "genreByGenreGroup": "view_genreByGenreGroup",
     "allLanguages": "view_AllLanguages",
     "getBooksByGenre": "sp_getBooksByGenre",
     "getAllDataByGenre": "sp_getAllDataByGenre",
+    "getAllDataBySearchParams": "sp_getAllDataBySearchParams",
     "charset": "utf8"
 
 }
@@ -55,8 +56,8 @@ PCLOUD = {
         "o2token": {"name": "oauth2_token"},
         "folder": {"name": "listfolder", "params": {"path": "/"}},
         "link": {"name": "getfilelink", "params": {"path": "/%s/%s"}},
-        "publink": {"name": "getfilepublink", "params" : {"path": "/%s/%s"}},
-        "download": {"name": "getpublinkdownload", "params": {"code":"%s"}}
+        "publink": {"name": "getfilepublink", "params": {"path": "/%s/%s"}},
+        "download": {"name": "getpublinkdownload", "params": {"code": "%s"}}
     }
 }
 

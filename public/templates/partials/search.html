@@ -1,40 +1,29 @@
-<style>
-  .full button span {
-    background-color: limegreen;
-    border-radius: 32px;
-    color: black;
-  }
-  .partially button span {
-    background-color: orange;
-    border-radius: 32px;
-    color: black;
-  }
-</style>
-<div class="panel panel-primary leftbarPanel" xmlns="http://www.w3.org/1999/html">
+<div class="panel panel-primary leftbarPanel">
     <div class="panel-heading">
         <h3 class="panel-title">Advanced search</h3>
     </div>
     <div class="panel-body">
+        <floating-loader ng-if="loadingData"></floating-loader>
         <p class="form-group">
             <label>Author</label>
-            <input class="form-control" type="text" ng-model="author"/>
+            <input class="form-control" type="text" ng-model="searchParam.author"/>
         </p>
         <p class="form-group">
             <label>Title</label>
-            <input class="form-control" type="text" ng-model="title"/>
+            <input class="form-control" type="text" ng-model="searchParam.title"/>
         </p>
         <p class="form-group">
             <label>Genre</label>
-            <select class="form-control" ng-model="genre">
-                <optgroup label="all">
-                    <option>genre</option>
+            <select class="form-control" ng-model="searchParam.genre">
+                <optgroup label="{{gparent.gdesc}}" ng-repeat="gparent  in genres track by gparent.gid">
+                    <option label="{{gkid.gdesc}}"  value="{{gkid.gid}}" ng-repeat="gkid in gparent.children track by gkid.gid"/>
                 </optgroup>
             </select>
         </p>
         <p class="form-group">
             <label>From Date</label>
         <p class="input-group">
-            <input type="text" class="form-control" uib-datepicker-popup ng-model="dtFrom"
+            <input type="text" class="form-control" uib-datepicker-popup ng-model="searchParam.dtFrom"
                    is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"/>
           <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="open1()"><i
@@ -45,7 +34,7 @@
         <p class="form-group">
             <label>To Date</label>
             <p class="input-group">
-                <input type="text" class="form-control" uib-datepicker-popup ng-model="dtTo" is-open="popup2.opened"
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="searchParam.dtTo" is-open="popup2.opened"
                        datepicker-options="dateOptions" ng-required="true" close-text="Close"/>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open2()"><i
@@ -53,8 +42,10 @@
               </span>
             </p>
         </p>
+
         <p class="btn-toolbar">
-            <button class="btn btn-primary">Search</button>
+            <button class="btn btn-primary" ng-click="searchByForm()">Search</button>
+            <button class="btn btn-default" ng-click="clearSearch()">Clear</button>
         </p>
     </div>
 </div>

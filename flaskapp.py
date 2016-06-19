@@ -114,6 +114,34 @@ def find_books_bygenre(gid, lang, hide):
     return jsonify(rows=data)
 
 
+@app.route('/api/v1/library/books/bysearch/<lang>/<hide>', methods=['POST'])
+def find_books_bysearch(lang, hide):
+    if not Authentication.check_token('library', request):
+        return jsonify(error="access denied")
+    """'AID': None, 'BID': None, 'SERIE_NAME':None, 'SERIE_NUMBER': None, 'GENRE': None,'FILE': None, 'EXT': None,
+    'DEL': None, 'LANG': None, 'SIZE': None, 'DATE':None, 'PATH':None})"""
+    data = []
+    options = json.loads(request.data)
+    with Books() as books_manager:
+        books_result = books_manager.find_by_search_sp(options, lang,  True if hide=="true" else False)
+    authors = books_result['authors']
+    series = books_result['series']
+    books_by_serie = books_result['books_by_serie']
+    books_no_serie = books_result['books_no_serie']
+    for author in authors:
+        author_tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
+        tmp_series = filter(lambda x: x['AID'] == author['AID'], series)
+        for serie in tmp_series:
+            serie_tmp_arr = [change_level({'TITLE': serie['SERIE_NAME'], 'type': 'serie'}, 1)]
+            author_tmp_arr = author_tmp_arr + serie_tmp_arr + [change_level(book, 2) for book in books_by_serie if
+                                                               book['SERIE_NAME'] == serie['SERIE_NAME'] and book[
+                                                                   'AID'] == serie['AID']]
+        noseq = [change_level(book, 1) for book in books_no_serie if book['AID'] == author['AID']]
+            # noseq = sorted(noseq, key=lambda book: book['TITLE'])
+        data = data + author_tmp_arr + noseq
+
+    return jsonify(rows=data)
+
 @app.route('/api/v1/library/books/byauthor/<int:aid>/<lang>/<hide>')
 def find_books_byauthor(aid, lang, hide):
     if not Authentication.check_token('library', request):

@@ -225,6 +225,21 @@ class Books(object):
         data['series'] = result[1] if len(result) > 1 else []
         return data
 
+    def find_by_search_sp(self, options, lang='ru', hide=True):
+        """IN `author` VARCHAR(500) CHARSET utf8, IN `title` VARCHAR(500) CHARSET utf8, IN `iGid` INT, IN `fromDate` VARCHAR(20), IN `toDate` VARCHAR(20), IN `sLang` VARCHAR(10) CHARSET utf8, IN `iDel` INT"""
+        data = {
+            'error': None
+        }
+
+        result = self.connection.call_proc_fetch(cfg.DB['getAllDataBySearchParams'], (
+        options['author'], options['title'], options['gid'], options['fromDate'], options['toDate'], lang,
+        0 if not hide else 1))
+        data['books_no_serie'] = result[3] if len(result) > 0 else []
+        data['books_by_serie'] = result[2] if len(result) > 0 else []
+        data['authors'] = result[0] if len(result) > 1 else []
+        data['series'] = result[1] if len(result) > 1 else []
+        return data
+
     def find_by_file(self, libid, filename):
         info = None
         sql = u"SELECT AUTHOR,GENRE,TITLE,SERIES,SERNO,FILE,SIZE,LIBID,DEL,EXT,DATE,LANG,LIBRATE,KEYWORDS, PATH, BID FROM {} WHERE LIBID = %s AND  FILE = %s".format(

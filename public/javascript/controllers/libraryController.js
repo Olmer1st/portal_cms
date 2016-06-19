@@ -86,6 +86,28 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
                 break;
         }
     };
+    
+    
+      $scope.findBooksbySearchForm = function (options) {
+        $scope.stateParam = options;
+        $scope.books = [];
+        if (!options) return;
+        LoadingData(true);
+        var promise = apiService.searchForBooksByForm($scope.language.LANG, $scope.isHideDeleted,options);
+        promise.then(function (result) {
+            if (result && !result.error) {
+                $rootScope.safeApply(function () {
+                    //$scope.books = result.rows;
+                    $scope.gridOptions.data = result.rows;
+                });
+            }
+            LoadingData(false);
+
+        }, function (reason) {
+            LoadingData(false);
+        });
+    };
+    
     $scope.findBooksOfAuthor = function (aid) {
         $scope.stateParam = aid;
         $scope.books = [];
@@ -171,7 +193,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         enableFiltering: false,
         showTreeExpandNoChildren: false,
         enableRowSelection: true,
-        enableRowHeaderSelection: false,
+        enableRowHeaderSelection: true,
         enableSelectAll: false,
         multiSelect: false,
         noUnselect: true,
