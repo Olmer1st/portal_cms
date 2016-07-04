@@ -18,7 +18,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
     }, {
         name: "library.search",
         title: "Search",
-        active: false
+        active: false       
     }];
 
     $scope.selectedBook = {book: null, downloading: false};
@@ -108,7 +108,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         });
     };
     
-    $scope.findBooksOfAuthor = function (aid) {
+    $scope.findBooksOfAuthor = function (aid, next) {
         $scope.stateParam = aid;
         $scope.books = [];
         if (!aid) return;
@@ -122,9 +122,10 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
                 });
             }
             LoadingData(false);
-
+            if(next) next();
         }, function (reason) {
             LoadingData(false);
+            if(next) next();
         });
     };
 
@@ -201,7 +202,7 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         showGridFooter: true,
         rowTemplate: rowTemplate(),
         columnDefs: [
-            {name: 'name', width: '40%', field: "TITLE", enableColumnMenu: false},
+            {name: 'name', width: '40%', field: "TITLE", enableColumnMenu: false,cellTemplate: "<a ng-if='grid.appScope.checkIsShowUrl(row)' class='pointer' ng-click='grid.appScope.goToAuthor(row)'>{{row.entity.TITLE}}</a><span  ng-if='!grid.appScope.checkIsShowUrl(row)'>{{row.entity.TITLE}}</span>"},
             {name: '#', width: '2%', field: "SERIE_NUMBER", enableColumnMenu: false},
             {name: 'size', width: '7%', field: "SIZE", enableColumnMenu: false},
             {name: 'lng.', width: '5%', field: "LANG", enableColumnMenu: false},
@@ -224,6 +225,22 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         }
     };
 
+    $scope.checkIsShowUrl = function(row){
+        return row.entity.type=="author";
+    };
+
+    $scope.goToAuthor = function(row){
+        $scope.findBooksOfAuthor(row.entity.AID, function () {
+            var index;
+            for(index=0;index<$scope.buttons.length;index++){
+                var item = $scope.buttons[index];
+                if(item.name == "library.authors") break;
+            }
+            $scope.executeState(index);
+        });
+
+    };
+
     $scope.gridOptions.isRowSelectable = function (row) {
         if (!row.entity.type) {
             return true;
@@ -237,10 +254,13 @@ main_app.controller("libraryController", function ($scope, $rootScope, $location
         $scope.selectedBook.downloading = true;
         var filename = $scope.selectedBook.book.FILE + "."
             + $scope.selectedBook.book.EXT + ".zip";
+
+        var book_file_name = ($scope.selectedBook.book.SERIE_NUMBER)?$scope.selectedBook.book.SERIE_NUMBER + ".":"";
+        book_file_name = book_file_name + $scope.selectedBook.book.TITLE+ "." + $scope.selectedBook.book.EXT + ".zip";
         var promise = apiService.getDownloadLink($scope.selectedBook.book.BID, $scope.selectedBook.book.PATH, filename);
         promise.then(function (response) {
             var data = new Blob([response], {type: "application/zip"});
-            FileSaver.saveAs(data, filename);
+            FileSaver.saveAs(data, book_file_name);
             $scope.selectedBook.downloading = false;
         });
 

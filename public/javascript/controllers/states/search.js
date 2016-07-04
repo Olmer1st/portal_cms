@@ -65,7 +65,7 @@ main_app.controller("search", function ($scope, $rootScope, $state, apiService) 
         var options = {};
         options.author = $scope.searchParam.anchor?$scope.searchParam.anchor:'all';
         options.title = $scope.searchParam.title?$scope.searchParam.title:'all';
-        options.gid = $scope.searchParam.genre?$scope.searchParam.genre:'-1';
+        options.gid = $scope.searchParam.genre?$scope.searchParam.genre:'all';
         options.fromDate =formatDate($scope.searchParam.dtFrom);
         options.toDate = formatDate($scope.searchParam.dtTo);
         libraryScope.findBooksbySearchForm(options);

@@ -100,7 +100,7 @@ def find_books_bygenre(gid, lang, hide):
     books_by_serie = books_result['books_by_serie']
     books_no_serie = books_result['books_no_serie']
     for author in authors:
-        author_tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
+        author_tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author', "AID":author['AID']}, 0)]
         tmp_series = filter(lambda x: x['AID'] == author['AID'], series)
         for serie in tmp_series:
             serie_tmp_arr = [change_level({'TITLE': serie['SERIE_NAME'], 'type': 'serie'}, 1)]
@@ -129,7 +129,7 @@ def find_books_bysearch(lang, hide):
     books_by_serie = books_result['books_by_serie']
     books_no_serie = books_result['books_no_serie']
     for author in authors:
-        author_tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
+        author_tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author', "AID":author['AID']}, 0)]
         tmp_series = filter(lambda x: x['AID'] == author['AID'], series)
         for serie in tmp_series:
             serie_tmp_arr = [change_level({'TITLE': serie['SERIE_NAME'], 'type': 'serie'}, 1)]
@@ -184,7 +184,7 @@ def find_books_byserie(sid, lang, hide):
     authors = authors_result['rows']
     authors = sorted(authors, key=lambda author: author["FULLNAME"])
     for author in authors:
-        tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author'}, 0)]
+        tmp_arr = [change_level({'TITLE': author["FULLNAME"], 'type': 'author', "AID":author['AID']}, 0)]
         data = data + tmp_arr + [change_level(book, 1) for book in books if book['AID'] == author['AID']]
 
     books_result['rows'] = data

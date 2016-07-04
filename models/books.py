@@ -230,9 +230,9 @@ class Books(object):
         data = {
             'error': None
         }
-
+        gid = ",".join(options['gid']) if not isinstance(options['gid'], basestring) else options['gid']
         result = self.connection.call_proc_fetch(cfg.DB['getAllDataBySearchParams'], (
-        options['author'], options['title'], options['gid'], options['fromDate'], options['toDate'], lang,
+        options['author'], options['title'], gid, options['fromDate'], options['toDate'], lang,
         0 if not hide else 1))
         data['books_no_serie'] = result[3] if len(result) > 0 else []
         data['books_by_serie'] = result[2] if len(result) > 0 else []

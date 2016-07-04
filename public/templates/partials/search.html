@@ -14,7 +14,7 @@
         </p>
         <p class="form-group">
             <label>Genre</label>
-            <select class="form-control" ng-model="searchParam.genre">
+            <select class="form-control" ng-model="searchParam.genre" multiple>
                 <optgroup label="{{gparent.gdesc}}" ng-repeat="gparent  in genres track by gparent.gid">
                     <option label="{{gkid.gdesc}}"  value="{{gkid.gid}}" ng-repeat="gkid in gparent.children track by gkid.gid"/>
                 </optgroup>
