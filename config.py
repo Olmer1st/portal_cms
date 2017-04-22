@@ -46,9 +46,9 @@ LIBRARY = {
 }
 
 PCLOUD = {
-    "client_id": "R3Qp2U2jzLz",
-    "client_secret": "XnuHTHSaCBQ4RJtl3vyYxm2R2rok",
-    "access_token": "fAJLZR3Qp2U2jzLzZCKltq7ZqARlEFYiSmuXklWlY83PkR8Y3zgk",
+    "client_id": "",
+    "client_secret": "",
+    "access_token": "",
     "authorize_url": "https://my.pcloud.com/oauth2/authorize",
     "api_url": "https://api.pcloud.com",
     "redirect_uri": "http://localhost:5000/getcode",
